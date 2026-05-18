@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>Tisoy Sushi Maki – Order Online</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- ═══ NAVBAR ═══ -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <div class="logo-icon">🍣</div>
+      <div class="logo-text-wrap">
+        <div class="logo-name">TISOY SUSHI MAKI</div>
+        <div class="logo-sub">Dasmariñas, Cavite</div>
+      </div>
+    </a>
+
+    <div class="nav-right">
+      <button class="cart-btn" onclick="openCartDrawer()" id="navCartBtn">
+        🛒 Order
+        <span class="cart-count hidden" id="navCartCount">0</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ STORE STATUS BANNER ═══ -->
+<div class="store-status-bar" id="storeStatusBar">
+  <span class="status-icon" id="storeStatusIcon"></span>
+  <span id="storeStatusMsg"></span>
+  <div class="status-time" id="storeStatusTime"></div>
+</div>
+
+<!-- CLOSED OVERLAY -->
+<div class="closed-overlay" id="closedOverlay">
+  <div class="closed-card">
+    <div class="cc-icon" id="closedIcon">🌙</div>
+    <h2 id="closedTitle">We're Closed Right Now</h2>
+    <p id="closedMsg">Sorry, we're not taking orders at this time.</p>
+    <div class="hours-badge">🕘 Mon–Sun · 10:00 AM – 9:00 PM</div>
+    <div class="current-ph-time" id="closedCurrentTime"></div>
+    <a class="cc-wa" href="https://wa.me/639916758883?text=Hi%20Tisoy%20Sushi%20Maki!%20I%20have%20an%20inquiry%20%F0%9F%8D%A3" target="_blank">
+      <svg width="16" height="16" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Message Us on WhatsApp
+    </a>
+    <button class="cc-dismiss" onclick="dismissClosedOverlay()">Browse Menu (View Only)</button>
+  </div>
+</div>
+
+<!-- PROMO STRIP -->
+<div class="promo-strip">
+  <span class="promo-badge">📍 Dasmariñas, Cavite</span>
+  Delivery Fee depends on Lalamove · Fast Service
+  <span class="promo-badge">📞 0995 450 8647</span>
+</div>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-badge">✅ Verified Page &nbsp;|&nbsp; 🍣 Fresh Daily</div>
+      <h1>Authentic Sushi & Maki<br><span>Delivered Fresh</span><br>to Your Door</h1>
+      <p class="hero-desc">Experience restaurant-quality sushi and maki rolls made with premium ingredients — now available for delivery across Cavite and Manila. Order online in minutes!</p>
+
+      <div class="order-toggle-wrap">
+        <div class="order-toggle-label">How would you like your order?</div>
+        <div class="order-toggle">
+          <button class="toggle-btn active" onclick="setOrderType('delivery',this)">🛵 Delivery</button>
+          <button class="toggle-btn" onclick="setOrderType('pickup',this)">🚶 Pick Up</button>
+        </div>
+      </div>
+
+      <div class="hero-actions">
+        <button class="btn-primary-hero" onclick="document.querySelector('.menu-area').scrollIntoView({behavior:'smooth'})">
+          🍣 Order Now
+        </button>
+      </div>
+
+      <div class="hero-stats">
+        <div class="hero-stat"><strong>🍣</strong><span>Fresh Sushi Daily</span></div>
+        <div class="hero-stat"><strong>📍</strong><span>Cavite & Manila</span></div>
+        <div class="hero-stat"><strong>⚡</strong><span>Fast Delivery</span></div>
+        <div class="hero-stat"><strong>✅</strong><span>Verified Business</span></div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-visual-card">
+        <div class="hvc-emoji">🍣</div>
+        <div class="hvc-text">
+          <div class="hvc-title">Salmon Roll</div>
+          <div class="hvc-sub">Fresh · Premium</div>
+          <div class="hvc-price">₱280</div>
+        </div>
+      </div>
+      <div class="hero-visual-card">
+        <div class="hvc-emoji">🌯</div>
+        <div class="hvc-text">
+          <div class="hvc-title">Tuna Maki</div>
+          <div class="hvc-sub">Best Seller 🔥</div>
+          <div class="hvc-price">₱220</div>
+        </div>
+      </div>
+      <div class="hero-visual-card">
+        <div class="hvc-emoji">🍱</div>
+        <div class="hvc-text">
+          <div class="hvc-title">Bento Set</div>
+          <div class="hvc-sub">Today's Special</div>
+          <div class="hvc-price">₱350</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INFO BAR -->
+<div class="info-bar">
+  <div class="info-bar-inner">
+    <div class="info-chip"><span class="ic-icon">📍</span><div><div style="font-size:0.68rem;color:var(--gray)">Location</div><strong>Cityhomes Resortville, Dasmariñas, Cavite</strong></div></div>
+    <div class="info-divider"></div>
+    <div class="info-chip"><span class="ic-icon">🕘</span><div><div style="font-size:0.68rem;color:var(--gray)">Store Hours</div><strong>Mon–Sun · 10:00 AM – 9:00 PM</strong></div></div>
+    <div class="info-divider"></div>
+    <div class="info-chip"><span class="ic-icon">📞</span><div><div style="font-size:0.68rem;color:var(--gray)">Call / Text</div><strong>0995 450 8647</strong></div></div>
+    <div class="info-divider"></div>
+    <div class="info-chip"><span class="ic-icon">🚀</span><div><div style="font-size:0.68rem;color:var(--gray)">Delivery</div><strong>Cavite &amp; Manila Areas</strong></div></div>
+  </div>
+</div>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main-wrapper">
+
+  <!-- DESKTOP SIDEBAR -->
+  <aside class="cat-sidebar">
+    <div class="cat-sidebar-inner">
+      <div class="cat-sidebar-title">Menu Categories</div>
+      <div id="desktopCats"></div>
+    </div>
+  </aside>
+
+  <!-- MENU AREA -->
+  <main class="menu-area">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input 
+        type="text" 
+        id="menuSearch" 
+        class="search-input" 
+        placeholder="Search sushi, maki, rolls..."
+        oninput="searchMenu(this.value)"/>
+      <button class="search-clear hidden" id="searchClear" onclick="clearSearch()">✕</button>
+    </div>
+    <div class="mobile-cats" id="mobileCats"></div>
+    <div class="section-hd">
+      <h2 id="secTitle">🔥 Best Sellers</h2>
+      <p id="secDesc">Our most-ordered sushi and maki rolls</p>
+    </div>
+    <div id="menuSections"></div>
+  </main>
+
+  <!-- DESKTOP CART -->
+  <aside class="cart-sidebar">
+    <div class="cart-box">
+      <div class="cart-hd">
+        <span>🛒</span>
+        <h3>Your Order</h3>
+        <span id="cartOrderType" style="font-size:0.68rem;background:rgba(255,255,255,0.2);padding:3px 10px;border-radius:20px;font-weight:700;flex-shrink:0;">🛵 Delivery</span>
+      </div>
+      <div class="cart-bd" id="desktopCartBd"></div>
+      <div style="padding:0 14px 14px;" id="desktopCartSum"></div>
+    </div>
+  </aside>
+</div>
+
+<!-- FLOAT CART (mobile) -->
+<button class="float-cart" id="floatCart" onclick="openCartDrawer()">
+  🛒 View Order
+  <span class="fc-badge" id="fcCount">0</span>
+  <span id="fcTotal">₱0</span>
+</button>
+
+<!-- MOBILE CART DRAWER -->
+<div class="drawer" id="cartDrawer">
+  <div class="drawer-bd" onclick="closeCartDrawer()"></div>
+  <div class="drawer-sheet">
+    <div class="drawer-handle"></div>
+    <div class="drawer-title">🛒 Your Order</div>
+    <div id="mobileCartBd"></div>
+    <div id="mobileCartSum"></div>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="overlay" id="checkoutModal">
+  <div class="modal">
+    <div class="modal-hd">
+      <h3>📋 Complete Your Order</h3>
+      <button class="modal-x" onclick="closeModal('checkoutModal')">✕</button>
+    </div>
+    <div class="modal-bd">
+      <div class="order-mini" id="checkoutSummary"></div>
+      <div class="form-row">
+        <div class="fg"><label>First Name *</label><input id="fname" placeholder="Juan" /></div>
+        <div class="fg"><label>Last Name *</label><input id="lname" placeholder="Dela Cruz" /></div>
+      </div>
+      <div class="fg"><label>Mobile Number *</label><input id="phone" type="tel" placeholder="09XX XXX XXXX" /></div>
+      <div class="fg">
+  <label>Delivery Address *</label>
+  <input type="text" id="deliveryAddress" placeholder="House #, Street, etc." required>
+</div>
+
+<label>Barangay / Area *</label>
+<input 
+  type="text" 
+  id="barangay" 
+  list="barangayList"
+  placeholder="Type or select barangay"
+  required>
+
+<datalist id="barangayList">
+  <option value="Burol I">
+  <option value="Burol II">
+  <option value="Burol III">
+  <option value="Burol Main">
+  <option value="Datu Esmael">
+  <option value="Emmanuel Bergado I">
+  <option value="Emmanuel Bergado II">
+  <option value="Fatima I">
+  <option value="Fatima II">
+  <option value="Fatima III">
+  <option value="H-2">
+  <option value="Langkaan I">
+  <option value="Langkaan II">
+  <option value="Luzviminda I">
+  <option value="Luzviminda II">
+  <option value="Paliparan I">
+  <option value="Paliparan II">
+  <option value="Paliparan III">
+  <option value="Sabang">
+  <option value="Saint Peter I">
+  <option value="Saint Peter II">
+  <option value="Salawag">
+  <option value="Salitran I">
+  <option value="Salitran II">
+  <option value="Salitran III">
+  <option value="Salitran IV">
+  <option value="Sampaloc I">
+  <option value="Sampaloc II">
+  <option value="Sampaloc III">
+  <option value="Sampaloc IV">
+  <option value="Sampaloc V">
+  <option value="San Agustin I">
+  <option value="San Agustin II">
+  <option value="San Agustin III">
+  <option value="San Andres I">
+  <option value="San Andres II">
+  <option value="San Antonio de Padua I">
+  <option value="San Antonio de Padua II">
+  <option value="San Dionisio">
+  <option value="San Esteban">
+  <option value="San Francisco I">
+  <option value="San Francisco II">
+  <option value="San Isidro Labrador I">
+  <option value="San Isidro Labrador II">
+  <option value="San Jose">
+  <option value="San Juan">
+  <option value="San Lorenzo Ruiz I">
+  <option value="San Lorenzo Ruiz II">
+  <option value="San Luis I">
+  <option value="San Luis II">
+  <option value="San Manuel I">
+  <option value="San Manuel II">
+  <option value="San Mateo">
+  <option value="San Miguel I">
+  <option value="San Miguel II">
+  <option value="San Nicolas I">
+  <option value="San Nicolas II">
+  <option value="San Roque">
+  <option value="San Simon">
+  <option value="Santa Cristina I">
+  <option value="Santa Cristina II">
+  <option value="Santa Cruz I">
+  <option value="Santa Cruz II">
+  <option value="Santa Fe">
+  <option value="Santa Lucia">
+  <option value="Santa Maria">
+  <option value="Santo Cristo">
+  <option value="Santo Niño I">
+  <option value="Santo Niño II">
+  <option value="Victoria Reyes">
+  <option value="Zone I">
+  <option value="Zone I-B">
+  <option value="Zone II">
+  <option value="Zone III">
+  <option value="Zone IV">
+</datalist>
+      <div class="fg">
+        <label>Special Instructions <span style="color:var(--gray);font-weight:600">(optional)</span></label>
+        <textarea id="notes" placeholder="e.g. Extra soy sauce, no wasabi..."></textarea>
+      </div>
+      <div class="fg">
+        <label>Payment Method</label>
+        <div class="pay-grid">
+          <div class="pay-opt sel" onclick="selPay(this,'cod')"><div class="pay-icon">💵</div>Cash on Delivery</div>
+          <div class="pay-opt" onclick="selPay(this,'gcash')"><div class="pay-icon">📱</div>GCash</div>
+          <div class="pay-opt" onclick="selPay(this,'maya')"><div class="pay-icon">💳</div>Maya</div>
+          <div class="pay-opt" onclick="selPay(this,'bank')"><div class="pay-icon">🏦</div>Bank Transfer</div>
+        </div>
+      </div>
+      <button class="place-btn" onclick="placeOrder()">🚀 Place Order</button>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="overlay" id="successModal">
+  <div class="modal">
+    <div class="success-body">
+      <div class="s-icon">🎉</div>
+      <h2>Order Confirmed!</h2>
+      <p>Salamat! Your sushi order has been received.<br>We'll contact you shortly to confirm.</p>
+      <div class="order-num" id="orderNumEl">#TSM-0001</div>
+      <div class="contact-info">
+        <p>📞 <strong>0995 450 8647</strong></p>
+        <p>💬 WhatsApp: <strong>+63 991 675 8883</strong></p>
+        <p>📧 <strong>bayanileonilo@gmail.com</strong></p>
+      </div>
+      <p style="font-size:0.78rem;color:var(--gray);">For updates, please save our contact number.<br>Estimated delivery: <strong>30–60 minutes</strong></p>
+      <button class="s-close" onclick="closeSuccess()">Continue Shopping 🍣</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOCATION MODAL -->
+<div class="overlay" id="locationModal">
+  <div class="modal">
+    <div class="modal-hd">
+      <h3>📍 Set Your Location</h3>
+      <button class="modal-x" onclick="closeModal('locationModal')">✕</button>
+    </div>
+    <div class="modal-bd">
+      <div class="fg"><label>Full Delivery Address</label><input id="locInput" placeholder="House No., Street, Barangay..." /></div>
+      <div class="fg">
+        <label>Delivery Area</label>
+        <select id="locArea">
+          <option value="">Select your area...</option>
+          <optgroup label="Dasmariñas, Cavite">
+            <option>Cityhomes Resortville</option><option>Brgy. San Agustin</option>
+            <option>Brgy. Paliparan</option><option>Brgy. Salitran</option>
+          </optgroup>
+          <optgroup label="Other Cavite Areas">
+            <option>Bacoor</option><option>Imus</option><option>General Trias</option>
+          </optgroup>
+          <optgroup label="Manila & Nearby">
+            <option>Las Piñas</option><option>Muntinlupa</option><option>Paranaque</option>
+          </optgroup>
+        </select>
+      </div>
+      <button class="place-btn" onclick="saveLocation()">Save Location</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ADMIN FAB & PANEL -->
+<!-- ADMIN FLOATING BUTTONS - Only visible to Owner -->
+<div id="adminControls" style="display: none;">
+  <!-- Gear Icon - Status & Announcements -->
+  <div class="admin-fab" id="adminFab" onclick="toggleAdminPanel()" title="Owner Panel - Status & Announcements">⚙️</div>
+<div class="admin-fab add-menu-fab" id="addMenuFab" onclick="showAddMenuModal()" title="Add New Menu Item">➕</div>
+</div>
+<div class="admin-panel" id="adminPanel">
+  <h4>⚙️ Owner Panel</h4>
+  <div class="admin-toggle-row">
+    <span><span class="admin-status-dot" id="adminDot"></span> Temporarily Closed</span>
+    <div class="toggle-switch" id="adminToggle" onclick="toggleOwnerClosed()"></div>
+  </div>
+  <div class="admin-msg-area" id="adminMsgArea">
+    <label>Custom message for customers:</label>
+    <textarea id="adminMsgInput" placeholder="e.g. Closed today for a family event. Back tomorrow at 10AM! 🙏"></textarea>
+  </div>
+  <button class="admin-apply-btn" onclick="applyOwnerStatus()">✅ Apply &amp; Publish</button>
+</div>
+
+<!-- WHATSAPP FLOAT -->
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="fb-logo">TISOY SUSHI <span>MAKI</span></div>
+      <p>Fresh, authentic sushi and maki rolls made daily. Serving Cavite &amp; Manila with love and quality ingredients. ✅ Verified Business</p>
+      <div class="footer-social">
+  <a class="f-social" href="https://www.facebook.com/share/18KwaefxXj/" target="_blank" title="Facebook">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.235 2.686.235v2.97h-1.514c-1.491 0-1.956.93-1.956 1.874v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+  </a>
+  <a class="f-social" href="https://wa.me/639916758883" target="_blank" title="WhatsApp">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+  <a class="f-social" href="mailto:bayanileonilo@gmail.com" title="Email">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="#EA4335"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 010 19.366V5.457c0-.904.732-1.636 1.636-1.636h.749L12 10.87l9.615-7.049h.749C23.268 3.821 24 4.553 24 5.457z"/></svg>
+  </a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Contact Us</h4>
+      <p>📞 0995 450 8647</p>
+      <p>💬 +63 991 675 8883 (WhatsApp)</p>
+      <p>📧 bayanileonilo@gmail.com</p>
+      <p>📍 Cityhomes Resortville,<br>&nbsp;&nbsp;&nbsp;&nbsp;Dasmariñas, Cavite 4114</p>
+    </div>
+    <div class="footer-col">
+      <h4>Store Info</h4>
+      <p>🕘 Mon–Sun: 10:00 AM – 9:00 PM</p>
+      <p>🛵 Delivery: via Lalamove</p>
+      <p>🏃 Pick Up available</p>
+      <a href="https://www.facebook.com/share/18KwaefxXj/" target="_blank">📘 Visit our Facebook Page</a>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2025 Tisoy Sushi Maki · Dasmariñas, Cavite · All rights reserved.</div>
+</footer>
+
+<!-- ITEM DETAIL MODAL -->
+<div class="overlay" id="itemModal" style="display: none;">
+  <div class="modal item-detail-modal">
+    <div class="modal-hd">
+      <h3>Item Details</h3>
+      <button class="modal-x" onclick="closeItemModal()">✕</button>
+    </div>
+    <div class="modal-bd">
+      <!-- Image -->
+      <img id="modalImage" src="" alt="" class="modal-item-img">
+
+      <h2 id="modalName"></h2>
+      <p id="modalDesc" class="modal-desc"></p>
+
+      <!-- Variants / Price -->
+      <div id="modalVariants"></div>
+      <div class="modal-price" id="modalPrice"></div>
+
+      <button id="modalAddBtn" class="add-btn-large">
+        ＋ Add to Order
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN EDIT MODAL -->
+<div class="overlay" id="adminEditModal" style="display: none;">
+  <div class="modal admin-edit-modal">
+    <div class="modal-hd">
+      <h3>✏️ Edit Item</h3>
+      <button class="modal-x" onclick="closeAdminEditModal()">✕</button>
+    </div>
+    <div class="modal-bd" id="editModalBody">
+      <!-- Filled dynamically by JavaScript -->
+    </div>
+  </div>
+</div>
+
+<!-- ADD MENU MODAL -->
+<div class="overlay" id="addMenuModal" style="display: none;">
+  <div class="modal admin-edit-modal" style="max-width: 500px;">
+    <div class="modal-hd">
+      <h3>➕ Add New Menu Item</h3>
+      <button class="modal-x" onclick="closeAddMenuModal()">✕</button>
+    </div>
+    <div class="modal-bd" id="addMenuBody">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+</div>
+  
+<!-- ═══ SCRIPTS (load order matters) ═══ -->
+<script src="js/data.js"></script>
+<script src="js/store.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/checkout.js"></script>
+<script src="js/admin.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>

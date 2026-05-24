@@ -218,8 +218,12 @@ function setActiveCat(id) {
 /* ── Order type toggle ── */
 function setOrderType(t, btn) {
   orderType = t;
+  // Update any toggle buttons (desktop cart style)
   document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
+  if (btn) btn.classList.add('active');
+  // Update cart order type badge
+  const badge = document.getElementById('cartOrderType');
+  if (badge) badge.textContent = t === 'delivery' ? 'Delivery' : 'Pick-Up';
   renderCart();
 }
 
@@ -460,6 +464,24 @@ function openCheckoutPage() {
 
   document.getElementById('checkoutPage').classList.add('open');
   document.body.style.overflow = 'hidden';
+
+  // Sync checkout toggle buttons with current orderType
+  const cttD = document.getElementById('cttDelivery');
+  const cttP = document.getElementById('cttPickup');
+  if (cttD && cttP) {
+    if (orderType === 'pickup') {
+      cttD.classList.remove('active');
+      cttP.classList.add('active');
+      setCheckoutType('pickup', cttP);
+    } else {
+      cttP.classList.remove('active');
+      cttD.classList.add('active');
+      setCheckoutType('delivery', cttD);
+    }
+  }
+
+  // Initialize interactive map after the page is visible
+  setTimeout(initCheckoutMap, 200);
 }
 
 function closeCheckoutPage() {
@@ -534,15 +556,6 @@ window.placeOrderStitch = function() {
     const con = document.getElementById('confirmOrderNum');
     if (con) con.textContent = 'Order Number: ' + orderNum;
 
-    // Set tracking times
-    const now = new Date();
-    const timeStr = now.toLocaleTimeString('en-PH', {hour:'2-digit',minute:'2-digit'});
-    const elR = document.getElementById('orderReceivedTime');
-    if (elR) elR.textContent = timeStr;
-    const elP = document.getElementById('preparingTime');
-    const prepTime = new Date(now.getTime() + 5 * 60000).toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit'});
-    if (elP) elP.textContent = prepTime;
-
     // Clear cart
     cart = {};
     renderCart();
@@ -570,58 +583,169 @@ window.closeConfirmPage = function() {
   });
 };
 
-/* ── Open/Close Tracking Page ── */
-window.openTrackingPage = function() {
-  const eta = new Date(Date.now() + 40 * 60000);
-  const etaStr = eta.toLocaleTimeString('en-PH', {hour:'2-digit',minute:'2-digit'});
-  const etaEl = document.getElementById('trackingETA');
-  const etaPEl = document.getElementById('trackingETAPanel');
-  if (etaEl) etaEl.textContent = etaStr;
-  if (etaPEl) etaPEl.textContent = 'ETA: ' + etaStr;
-  document.getElementById('trackingPage').classList.add('open');
-};
+/* ── Checkout Type Toggle (Delivery vs Pick-Up inside checkout) ── */
+function setCheckoutType(type, btn) {
+  orderType = type;
+  document.querySelectorAll('.ctt-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
 
-window.closeTrackingPage = function() {
-  document.getElementById('trackingPage').classList.remove('open');
-  // Show review modal after a moment
-  setTimeout(() => openReviewModal(), 400);
-};
-
-/* ── Review Modal ── */
-let sushiRatingVal = 4;
-
-window.openReviewModal = function() {
-  document.getElementById('reviewModal').classList.add('open');
-};
-
-window.closeReviewModal = function() {
-  document.getElementById('reviewModal').classList.remove('open');
-};
-
-window.setSushiRating = function(val) {
-  sushiRatingVal = val;
-  document.querySelectorAll('.sushi-roll-btn').forEach((btn, i) => {
-    btn.classList.toggle('lit', i < val);
-  });
-};
-
-window.updateSlider = function(slider, val) {
-  const pct = ((val - 1) / 4) * 100;
-  slider.style.setProperty('--pct', pct + '%');
-  const stars = slider.parentElement.querySelector('.rsr-stars');
-  if (stars) {
-    const filled = Math.round(Number(val));
-    stars.innerHTML = '★'.repeat(filled) + '☆'.repeat(5 - filled);
+  // Update nav toggle to match
+  const pill = document.getElementById('navTogglePill');
+  const label = document.getElementById('navDeliveryLabel');
+  if (type === 'pickup') {
+    if (pill) pill.classList.add('pickup');
+    if (label) label.textContent = 'Pick-Up / Delivery';
+  } else {
+    if (pill) pill.classList.remove('pickup');
+    if (label) label.textContent = 'Delivery / Pick-Up';
   }
-};
 
-window.submitReview = function() {
-  showToast('🍣 Thank you for your review! Salamat!');
-  closeReviewModal();
-};
+  // Show/hide delivery-only fields
+  const deliveryFields = document.querySelectorAll('.delivery-only-field');
+  const label3 = document.getElementById('checkoutDetailLabel');
+  const mapEmbed = document.querySelector('.checkout-map-embed');
+
+  deliveryFields.forEach(el => {
+    el.style.display = (type === 'delivery') ? '' : 'none';
+  });
+  if (mapEmbed) mapEmbed.style.display = (type === 'delivery') ? '' : 'none';
+  if (label3) label3.textContent = (type === 'delivery') ? 'Delivery Details' : 'Pick-Up Details';
+
+  renderCart();
+}
+
+window.setCheckoutType = setCheckoutType;
 
 /* ── Override openCheckout to use stitch checkout page ── */
 window.openCheckout = function() { openCheckoutPage(); };
+
+/* ── Interactive Checkout Map (Leaflet + OpenStreetMap) ── */
+let checkoutMapInstance = null;
+let checkoutMarker = null;
+
+function initCheckoutMap() {
+  const mapEl = document.getElementById('checkoutMap');
+  if (!mapEl || !window.L) return;
+
+  // If already initialized, just invalidate size (fixes display after show)
+  if (checkoutMapInstance) {
+    checkoutMapInstance.invalidateSize();
+    return;
+  }
+
+  // Default center: Dasmariñas, Cavite, Philippines
+  const defaultLat = 14.3294;
+  const defaultLng = 120.9367;
+
+  checkoutMapInstance = L.map('checkoutMap', {
+    center: [defaultLat, defaultLng],
+    zoom: 14,
+    zoomControl: true,
+    scrollWheelZoom: false,  // prevent accidental scroll on mobile
+    tap: true
+  });
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    maxZoom: 19
+  }).addTo(checkoutMapInstance);
+
+  // Custom green pin icon
+  const pinIcon = L.divIcon({
+    className: '',
+    html: `<div style="width:32px;height:42px;display:flex;flex-direction:column;align-items:center;">
+      <div style="width:32px;height:32px;background:#00A651;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.35);"></div>
+      <div style="width:4px;height:10px;background:#00A651;border-radius:0 0 4px 4px;margin-top:-2px;"></div>
+    </div>`,
+    iconSize: [32, 42],
+    iconAnchor: [16, 42],
+    popupAnchor: [0, -42]
+  });
+
+  // Click / tap to place marker
+  checkoutMapInstance.on('click', function(e) {
+    const { lat, lng } = e.latlng;
+    placeDeliveryPin(lat, lng, pinIcon);
+  });
+}
+
+function placeDeliveryPin(lat, lng, icon) {
+  // Remove existing marker
+  if (checkoutMarker) {
+    checkoutMapInstance.removeLayer(checkoutMarker);
+  }
+
+  const pinIcon = icon || L.divIcon({
+    className: '',
+    html: `<div style="width:32px;height:42px;display:flex;flex-direction:column;align-items:center;">
+      <div style="width:32px;height:32px;background:#00A651;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.35);"></div>
+      <div style="width:4px;height:10px;background:#00A651;border-radius:0 0 4px 4px;margin-top:-2px;"></div>
+    </div>`,
+    iconSize: [32, 42],
+    iconAnchor: [16, 42],
+    popupAnchor: [0, -42]
+  });
+
+  checkoutMarker = L.marker([lat, lng], { icon: pinIcon, draggable: true })
+    .addTo(checkoutMapInstance)
+    .bindPopup('<b>Your delivery location</b><br><small>Drag to adjust</small>')
+    .openPopup();
+
+  // Allow dragging the marker too
+  checkoutMarker.on('dragend', function(ev) {
+    const pos = ev.target.getLatLng();
+    reverseGeocodeAndFill(pos.lat, pos.lng);
+  });
+
+  reverseGeocodeAndFill(lat, lng);
+}
+
+function reverseGeocodeAndFill(lat, lng) {
+  // Use Nominatim for reverse geocoding (free, no API key)
+  const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`;
+  
+  const addrInput = document.getElementById('deliveryAddress');
+  const barangayInput = document.getElementById('barangay');
+  
+  // Show loading state
+  if (addrInput) addrInput.placeholder = 'Detecting address...';
+
+  fetch(url, { headers: { 'Accept-Language': 'en' } })
+    .then(r => r.json())
+    .then(data => {
+      const a = data.address || {};
+      
+      // Build address string
+      const parts = [];
+      if (a.house_number) parts.push(a.house_number);
+      if (a.road || a.street) parts.push(a.road || a.street);
+      if (a.suburb || a.neighbourhood) parts.push(a.suburb || a.neighbourhood);
+      if (a.city || a.town || a.municipality) parts.push(a.city || a.town || a.municipality);
+      if (a.state) parts.push(a.state);
+
+      const fullAddress = parts.length ? parts.join(', ') : data.display_name;
+
+      if (addrInput) {
+        addrInput.value = fullAddress;
+        addrInput.placeholder = '123 Main St, Barangay...';
+      }
+
+      // Try to fill barangay
+      const brgy = a.suburb || a.neighbourhood || a.quarter || a.village || '';
+      if (barangayInput && brgy) {
+        barangayInput.value = brgy;
+      }
+
+      showToast('📍 Location pinned! Check address below.');
+    })
+    .catch(() => {
+      if (addrInput) {
+        addrInput.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+        addrInput.placeholder = '123 Main St, Barangay...';
+      }
+      showToast('📍 Pin placed! Please verify your address.');
+    });
+}
 
 /* Hook into DOMContentLoaded additions */
 document.addEventListener('DOMContentLoaded', () => {

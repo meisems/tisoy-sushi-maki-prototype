@@ -17,6 +17,12 @@ async function initAdmin() {
   const adminControls = document.getElementById('adminControls');
   if (adminControls) adminControls.style.display = 'block';
 
+  // Add .visible class so the fixed-position fabs actually appear
+  const adminFab = document.getElementById('adminFab');
+  const addMenuFab = document.getElementById('addMenuFab');
+  if (adminFab) adminFab.classList.add('visible');
+  if (addMenuFab) addMenuFab.classList.add('visible');
+
   // Load menu
   try {
     const res = await fetch('/api/menu');
@@ -96,13 +102,38 @@ function editItemInline(catId, itemId) {
     <input type="hidden" id="editItemId" value="${itemId}">
     
     <div class="fg">
-      <label>Image URL</label>
-      <input id="editImageUrl" type="text" value="${item.images && item.images[0] ? item.images[0] : ''}" placeholder="images/filename.jpg or full URL">
-      <div id="imagePreview" style="margin-top:10px; text-align:center;">
-        ${item.images && item.images[0] ? 
-          `<img src="${item.images[0]}" style="max-height:180px; max-width:100%; border-radius:12px; border:1px solid #ddd;">` : 
-          '<p style="color:#999;">No image yet</p>'}
+      <label>Item Photo</label>
+      <div class="img-tabs">
+        <button type="button" class="img-tab active" onclick="switchImgTab('edit','upload')">⬆️ Upload File</button>
+        <button type="button" class="img-tab" onclick="switchImgTab('edit','link')">🔗 Link URL</button>
       </div>
+
+      <!-- Upload panel -->
+      <div id="edit-panel-upload" class="img-panel">
+        <div class="img-dropzone" id="edit-dropzone"
+          onclick="document.getElementById('editFileInput').click()"
+          ondragover="event.preventDefault();this.classList.add('drag-over')"
+          ondragleave="this.classList.remove('drag-over')"
+          ondrop="handleImgDrop(event,'edit')">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+          <span>Click or drag &amp; drop an image here</span>
+          <small>JPG, PNG, WEBP · max 10 MB</small>
+        </div>
+        <input type="file" id="editFileInput" accept="image/*" style="display:none" onchange="handleImgFile(event,'edit')">
+      </div>
+
+      <!-- Link panel -->
+      <div id="edit-panel-link" class="img-panel" style="display:none;">
+        <input id="editImageUrl" type="text" value="${item.images && item.images[0] ? item.images[0] : ''}" placeholder="https://... or images/filename.jpg" oninput="updateImgPreview('edit',this.value)">
+      </div>
+
+      <!-- Shared preview -->
+      <div id="edit-img-preview" class="img-preview-box">
+        ${item.images && item.images[0]
+          ? `<img src="${item.images[0]}" alt="preview"><button type="button" class="img-clear-btn" onclick="clearImgPreview('edit')">✕ Remove</button>`
+          : `<span class="img-placeholder">No image selected</span>`}
+      </div>
+      <input type="hidden" id="editFinalImage" value="${item.images && item.images[0] ? item.images[0] : ''}">
     </div>
 
     <div class="fg">
@@ -132,6 +163,19 @@ function editItemInline(catId, itemId) {
   }
 
   html += `
+    <div class="fg">
+      <label>Item Badge / Category Tag</label>
+      <select id="editTag" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Nunito',sans-serif;font-size:.9rem;background:var(--bg-input);color:var(--text-main);">
+        <option value="" ${!item.tag ? 'selected' : ''}>— None —</option>
+        <option value="bestseller" ${item.tag === 'bestseller' ? 'selected' : ''}>⭐ Best Seller</option>
+        <option value="new" ${item.tag === 'new' ? 'selected' : ''}>✨ New Item</option>
+        <option value="spicy" ${item.tag === 'spicy' ? 'selected' : ''}>🌶️ Spicy</option>
+      </select>
+      <small style="color:var(--text-muted);font-size:.73rem;margin-top:5px;display:block;">
+        <b>Best Seller</b> &amp; <b>New</b> show a green banner (top-left) · <b>Spicy</b> shows a red badge (top-right)
+      </small>
+    </div>
+
     <div class="modal-actions">
       <button class="btn-secondary" onclick="closeAdminEditModal()">Cancel</button>
       <button class="btn-primary" onclick="saveEditedItem()">Save Changes</button>
@@ -151,8 +195,17 @@ async function saveEditedItem() {
   item.name = document.getElementById('editName').value.trim();
   item.desc = document.getElementById('editDesc').value.trim();
 
-  const newImageUrl = document.getElementById('editImageUrl').value.trim();
-  if (newImageUrl) item.images = [newImageUrl];
+  // Save tag
+  const tagVal = document.getElementById('editTag').value;
+  if (tagVal) { item.tag = tagVal; } else { delete item.tag; }
+
+  // If an image was picked via file upload, push it to /api/image first
+  let finalImg = document.getElementById('editFinalImage').value.trim();
+  if (finalImg === '__pending__') {
+    finalImg = await _uploadImageData('edit');
+    if (!finalImg) return; // upload failed — toast already shown, modal stays open
+  }
+  if (finalImg) item.images = [finalImg];
 
   if (!item.variants || item.variants.length === 0) {
     const price = parseInt(document.getElementById('editPrice').value);
@@ -167,10 +220,13 @@ async function saveEditedItem() {
     });
   }
 
-  await saveAdminMenu();
+  const ok = await saveAdminMenu();
   buildSections();
-  closeAdminEditModal();
-  showToast("✅ Changes saved successfully!");
+  if (ok) {
+    closeAdminEditModal();
+    showToast("✅ Changes saved!");
+  }
+  // If ok is false, the modal stays open and saveAdminMenu already showed the error toast
 }
 
 function closeAdminEditModal() {
@@ -200,16 +256,24 @@ async function deleteItemInline(catId, itemId) {
 }
 
 async function saveAdminMenu() {
-  if (!checkAdminAccess()) return;
+  if (!checkAdminAccess()) return false;
   try {
-    await fetch('/api/menu', {
+    const res = await fetch('/api/menu', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(adminMenu)
     });
+    if (!res.ok) {
+      const errText = await res.text().catch(() => res.status);
+      console.error('saveAdminMenu server error:', errText);
+      showToast(`⚠️ Save failed (${res.status}) — image may be too large`);
+      return false;
+    }
+    return true;
   } catch (e) {
-    showToast('⚠️ Failed to save menu');
+    showToast('⚠️ Failed to save menu — check connection');
     console.error(e);
+    return false;
   }
 }
 
@@ -237,9 +301,36 @@ function showAddMenuModal() {
     </div>
 
     <div class="fg">
-      <label>Image URL / Path</label>
-      <input id="newImageUrl" type="text" placeholder="images/new-item.jpg or full https:// url">
-      <div id="newImagePreview" style="margin-top:10px; text-align:center; min-height:100px;"></div>
+      <label>Item Photo</label>
+      <div class="img-tabs">
+        <button type="button" class="img-tab active" onclick="switchImgTab('new','upload')">⬆️ Upload File</button>
+        <button type="button" class="img-tab" onclick="switchImgTab('new','link')">🔗 Link URL</button>
+      </div>
+
+      <!-- Upload panel -->
+      <div id="new-panel-upload" class="img-panel">
+        <div class="img-dropzone" id="new-dropzone"
+          onclick="document.getElementById('newFileInput').click()"
+          ondragover="event.preventDefault();this.classList.add('drag-over')"
+          ondragleave="this.classList.remove('drag-over')"
+          ondrop="handleImgDrop(event,'new')">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+          <span>Click or drag &amp; drop an image here</span>
+          <small>JPG, PNG, WEBP · max 10 MB</small>
+        </div>
+        <input type="file" id="newFileInput" accept="image/*" style="display:none" onchange="handleImgFile(event,'new')">
+      </div>
+
+      <!-- Link panel -->
+      <div id="new-panel-link" class="img-panel" style="display:none;">
+        <input id="newImageUrl" type="text" placeholder="https://... or images/new-item.jpg" oninput="updateImgPreview('new',this.value)">
+      </div>
+
+      <!-- Shared preview -->
+      <div id="new-img-preview" class="img-preview-box">
+        <span class="img-placeholder">No image selected</span>
+      </div>
+      <input type="hidden" id="newFinalImage" value="">
     </div>
 
     <div class="fg">
@@ -259,6 +350,19 @@ function showAddMenuModal() {
       <h4>Variants (Size + Price)</h4>
       <div id="variantInputs"></div>
       <button onclick="addVariantField()" class="btn-secondary" style="margin-top:8px;">+ Add Size/Variant</button>
+    </div>
+
+    <div class="fg">
+      <label>Item Badge / Category Tag</label>
+      <select id="newTag" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Nunito',sans-serif;font-size:.9rem;background:var(--bg-input);color:var(--text-main);">
+        <option value="">— None —</option>
+        <option value="bestseller">⭐ Best Seller</option>
+        <option value="new">✨ New Item</option>
+        <option value="spicy">🌶️ Spicy</option>
+      </select>
+      <small style="color:var(--text-muted);font-size:.73rem;margin-top:5px;display:block;">
+        <b>Best Seller</b> &amp; <b>New</b> show a green banner (top-left) · <b>Spicy</b> shows a red badge (top-right)
+      </small>
     </div>
 
     <div class="modal-actions" style="margin-top:20px;">
@@ -307,11 +411,17 @@ async function saveNewMenuItem() {
   const catId = document.getElementById('newCatId').value;
   const name = document.getElementById('newName').value.trim();
   const desc = document.getElementById('newDesc').value.trim();
-  const imageUrl = document.getElementById('newImageUrl').value.trim();
 
   if (!name || !catId) {
     alert("Name and Category are required!");
     return;
+  }
+
+  // If an image was picked via file upload, push it to /api/image first
+  let imageUrl = document.getElementById('newFinalImage').value.trim();
+  if (imageUrl === '__pending__') {
+    imageUrl = await _uploadImageData('new');
+    if (!imageUrl) return; // upload failed — toast already shown, modal stays open
   }
 
   let newItem = {
@@ -321,6 +431,10 @@ async function saveNewMenuItem() {
     emoji: '🍣',
     images: imageUrl ? [imageUrl] : []
   };
+
+  // Save tag if selected
+  const newTag = document.getElementById('newTag').value;
+  if (newTag) newItem.tag = newTag;
 
   const priceType = document.getElementById('newPriceType').value;
 
@@ -348,10 +462,121 @@ async function saveNewMenuItem() {
   if (!window.adminMenu[catId]) window.adminMenu[catId] = [];
   window.adminMenu[catId].push(newItem);
 
-  await saveAdminMenu();
+  const ok = await saveAdminMenu();
   buildSections();
-  closeAddMenuModal();
-  showToast(`✅ New item "${name}" added!`);
+  if (ok) {
+    closeAddMenuModal();
+    showToast(`✅ "${name}" added!`);
+  }
+}
+
+// ==================== IMAGE UPLOAD HELPERS ====================
+
+/** Switch between Upload / Link tabs in a modal (prefix = 'edit' or 'new') */
+function switchImgTab(prefix, tab) {
+  document.getElementById(`${prefix}-panel-upload`).style.display = tab === 'upload' ? 'block' : 'none';
+  document.getElementById(`${prefix}-panel-link`).style.display  = tab === 'link'   ? 'block' : 'none';
+  document.querySelectorAll(`#${prefix === 'edit' ? 'adminEditModal' : 'addMenuModal'} .img-tab`)
+    .forEach(btn => btn.classList.toggle('active', btn.textContent.toLowerCase().includes(tab === 'upload' ? 'upload' : 'link')));
+}
+
+/** Handle file chosen via the <input type="file"> */
+function handleImgFile(event, prefix) {
+  const file = event.target.files[0];
+  if (!file) return;
+  _storeImgFile(prefix, file);
+}
+
+/** Handle file dropped onto the dropzone */
+function handleImgDrop(event, prefix) {
+  event.preventDefault();
+  document.getElementById(`${prefix}-dropzone`).classList.remove('drag-over');
+  const file = event.dataTransfer.files[0];
+  if (!file || !file.type.startsWith('image/')) return showToast('⚠️ Please drop an image file');
+  _storeImgFile(prefix, file);
+}
+
+/** Store the pending file — resize+compress, keep base64 in memory until save */
+function _storeImgFile(prefix, file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const MAX = 600;
+      let w = img.width, h = img.height;
+      if (w > h) { if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; } }
+      else        { if (h > MAX) { w = Math.round(w * MAX / h); h = MAX; } }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.75);
+      // Store base64 in memory (not in DOM input) to avoid 414
+      window[`_imgData_${prefix}`] = dataUrl;
+      document.getElementById(`${prefix}FinalImage`).value = '__pending__';
+      _showImgPreview(prefix, dataUrl, file.name);
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+/** Upload base64 to /api/image, returns the permanent URL or null on failure */
+async function _uploadImageData(prefix) {
+  const dataUrl = window[`_imgData_${prefix}`];
+  if (!dataUrl) return null;
+
+  const matches = dataUrl.match(/^data:(.+);base64,(.+)$/);
+  if (!matches) return null;
+
+  try {
+    showToast('⬆️ Saving image…');
+    const res = await fetch('/api/image', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mimeType: matches[1], data: matches[2] })
+    });
+    if (!res.ok) {
+      showToast('⚠️ Image upload failed (' + res.status + ')');
+      return null;
+    }
+    const result = await res.json();
+    window[`_imgData_${prefix}`] = null;
+    return result.url; // e.g. /api/image/img_1234567890
+  } catch (err) {
+    console.error('Image upload error:', err);
+    showToast('⚠️ Image upload failed — check connection');
+    return null;
+  }
+}
+
+/** Called when URL input changes */
+function updateImgPreview(prefix, url) {
+  window[`_pendingUpload_${prefix}`] = null;
+  document.getElementById(`${prefix}FinalImage`).value = url;
+  if (url) _showImgPreview(prefix, url, '');
+  else _clearPreviewBox(prefix);
+}
+
+function _showImgPreview(prefix, src, filename) {
+  const box = document.getElementById(`${prefix}-img-preview`);
+  box.innerHTML = `
+    <img src="${src}" alt="preview" onerror="this.parentElement.innerHTML='<span class=\\'img-placeholder\\'>⚠️ Could not load image</span>'">
+    ${filename ? `<div class="img-filename">${filename}</div>` : ''}
+    <button type="button" class="img-clear-btn" onclick="clearImgPreview('${prefix}')">✕ Remove</button>
+  `;
+}
+
+function clearImgPreview(prefix) {
+  window[`_imgData_${prefix}`] = null;
+  const finalEl = document.getElementById(`${prefix}FinalImage`);
+  if (finalEl) finalEl.value = '';
+  const urlEl = document.getElementById(`${prefix}ImageUrl`);
+  if (urlEl) urlEl.value = '';
+  _clearPreviewBox(prefix);
+}
+
+function _clearPreviewBox(prefix) {
+  document.getElementById(`${prefix}-img-preview`).innerHTML = '<span class="img-placeholder">No image selected</span>';
 }
 
 // ==================== GLOBAL ACCESS & INIT ====================
@@ -369,5 +594,10 @@ window.saveEditedItem = saveEditedItem;
 window.closeAdminEditModal = closeAdminEditModal;
 window.toggleItemVisibility = toggleItemVisibility;
 window.deleteItemInline = deleteItemInline;
+window.switchImgTab = switchImgTab;
+window.handleImgFile = handleImgFile;
+window.handleImgDrop = handleImgDrop;
+window.updateImgPreview = updateImgPreview;
+window.clearImgPreview = clearImgPreview;
 
 document.addEventListener('DOMContentLoaded', initAdmin);

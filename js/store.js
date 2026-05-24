@@ -89,7 +89,10 @@ async function checkStoreStatus() {
     msgEl.textContent = "We're currently CLOSED. " + opens + ' (Mon–Sun)';
     timeEl.textContent = 'Current PH Time: ' + timeStr;
 
-    document.getElementById('closedIcon').textContent  = ph.getHours() >= OPEN_HOUR ? '🌙' : '🌅';
+    const closedIcon = document.getElementById('closedIcon');
+    closedIcon.innerHTML = ph.getHours() >= OPEN_HOUR 
+      ? '<svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
+      : '<svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round"><path d="M17 18a5 5 0 0 0-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/></svg>';
     document.getElementById('closedTitle').textContent = "We're Closed Right Now";
     document.getElementById('closedMsg').textContent   = ph.getHours() < OPEN_HOUR
       ? "Our kitchen isn't ready yet! We open at 10:00 AM."

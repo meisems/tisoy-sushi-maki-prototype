@@ -1,9 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
   <title>Tisoy Sushi Maki – Order Online</title>
+
+  <!-- Favicon (inline SVG as data URI) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%2300A651'/><circle cx='32' cy='32' r='18' fill='%23fff'/><circle cx='32' cy='32' r='12' fill='%231a1a1a'/><circle cx='32' cy='32' r='7' fill='%23E63939'/><circle cx='27' cy='27' r='2.5' fill='%23fff' opacity='.7'/></svg>"/>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
@@ -14,7 +18,18 @@
 <nav class="navbar">
   <div class="nav-inner">
     <a href="#" class="logo">
-      <div class="logo-icon">🍣</div>
+      <!-- Professional SVG Logo Mark -->
+      <div class="logo-icon">
+        <svg width="24" height="24" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="18" cy="18" r="15" fill="white" opacity="0.15"/>
+          <circle cx="18" cy="18" r="10" fill="white" opacity="0.9"/>
+          <circle cx="18" cy="18" r="6" fill="#E63939"/>
+          <circle cx="14.5" cy="14.5" r="2" fill="white" opacity="0.6"/>
+          <!-- Nori wrap lines -->
+          <path d="M8 18 Q18 10 28 18" stroke="white" stroke-width="1.5" fill="none" opacity="0.5"/>
+          <path d="M8 18 Q18 26 28 18" stroke="white" stroke-width="1.5" fill="none" opacity="0.5"/>
+        </svg>
+      </div>
       <div class="logo-text-wrap">
         <div class="logo-name">TISOY SUSHI MAKI</div>
         <div class="logo-sub">Dasmariñas, Cavite</div>
@@ -22,8 +37,34 @@
     </a>
 
     <div class="nav-right">
+      <!-- Delivery / Pick-Up Toggle (Stitch Design) -->
+      <div class="nav-delivery-toggle" onclick="toggleDeliveryNav()" id="navDeliveryToggle" title="Switch between delivery and pick-up">
+        <span id="navDeliveryLabel">Delivery / Pick-Up</span>
+        <div class="nav-toggle-pill" id="navTogglePill"></div>
+      </div>
+      <!-- Dark/Light Mode Toggle -->
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle dark/light mode" aria-label="Toggle theme">
+        <span class="theme-icon-sun">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+        </span>
+        <span class="theme-icon-moon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </span>
+      </button>
+
       <button class="cart-btn" onclick="openCartDrawer()" id="navCartBtn">
-        🛒 Order
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+        </svg>
+        Order
         <span class="cart-count hidden" id="navCartCount">0</span>
       </button>
     </div>
@@ -40,10 +81,17 @@
 <!-- CLOSED OVERLAY -->
 <div class="closed-overlay" id="closedOverlay">
   <div class="closed-card">
-    <div class="cc-icon" id="closedIcon">🌙</div>
+    <div class="cc-icon" id="closedIcon">
+      <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/><path d="M12 6v6l4 2"/>
+      </svg>
+    </div>
     <h2 id="closedTitle">We're Closed Right Now</h2>
     <p id="closedMsg">Sorry, we're not taking orders at this time.</p>
-    <div class="hours-badge">🕘 Mon–Sun · 10:00 AM – 9:00 PM</div>
+    <div class="hours-badge">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="vertical-align:middle;margin-right:5px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Mon–Sun · 10:00 AM – 9:00 PM
+    </div>
     <div class="current-ph-time" id="closedCurrentTime"></div>
     <a class="cc-wa" href="https://wa.me/639916758883?text=Hi%20Tisoy%20Sushi%20Maki!%20I%20have%20an%20inquiry%20%F0%9F%8D%A3" target="_blank">
       <svg width="16" height="16" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
@@ -55,80 +103,75 @@
 
 <!-- PROMO STRIP -->
 <div class="promo-strip">
-  <span class="promo-badge">📍 Dasmariñas, Cavite</span>
+  <span class="promo-badge">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="vertical-align:middle;margin-right:3px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    Dasmariñas, Cavite
+  </span>
   Delivery Fee depends on Lalamove · Fast Service
-  <span class="promo-badge">📞 0995 450 8647</span>
+  <span class="promo-badge">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="vertical-align:middle;margin-right:3px"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.76a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+    0995 450 8647
+  </span>
 </div>
 
-<!-- ═══ HERO ═══ -->
-<section class="hero">
-  <div class="hero-inner">
-    <div class="hero-left">
-      <div class="hero-badge">✅ Verified Page &nbsp;|&nbsp; 🍣 Fresh Daily</div>
-      <h1>Authentic Sushi & Maki<br><span>Delivered Fresh</span><br>to Your Door</h1>
-      <p class="hero-desc">Experience restaurant-quality sushi and maki rolls made with premium ingredients — now available for delivery across Cavite and Manila. Order online in minutes!</p>
-
-      <div class="order-toggle-wrap">
-        <div class="order-toggle-label">How would you like your order?</div>
-        <div class="order-toggle">
-          <button class="toggle-btn active" onclick="setOrderType('delivery',this)">🛵 Delivery</button>
-          <button class="toggle-btn" onclick="setOrderType('pickup',this)">🚶 Pick Up</button>
-        </div>
-      </div>
-
-      <div class="hero-actions">
-        <button class="btn-primary-hero" onclick="document.querySelector('.menu-area').scrollIntoView({behavior:'smooth'})">
-          🍣 Order Now
-        </button>
-      </div>
-
-      <div class="hero-stats">
-        <div class="hero-stat"><strong>🍣</strong><span>Fresh Sushi Daily</span></div>
-        <div class="hero-stat"><strong>📍</strong><span>Cavite & Manila</span></div>
-        <div class="hero-stat"><strong>⚡</strong><span>Fast Delivery</span></div>
-        <div class="hero-stat"><strong>✅</strong><span>Verified Business</span></div>
-      </div>
-    </div>
-    <div class="hero-right">
-      <div class="hero-visual-card">
-        <div class="hvc-emoji">🍣</div>
-        <div class="hvc-text">
-          <div class="hvc-title">Salmon Roll</div>
-          <div class="hvc-sub">Fresh · Premium</div>
-          <div class="hvc-price">₱280</div>
-        </div>
-      </div>
-      <div class="hero-visual-card">
-        <div class="hvc-emoji">🌯</div>
-        <div class="hvc-text">
-          <div class="hvc-title">Tuna Maki</div>
-          <div class="hvc-sub">Best Seller 🔥</div>
-          <div class="hvc-price">₱220</div>
-        </div>
-      </div>
-      <div class="hero-visual-card">
-        <div class="hvc-emoji">🍱</div>
-        <div class="hvc-text">
-          <div class="hvc-title">Bento Set</div>
-          <div class="hvc-sub">Today's Special</div>
-          <div class="hvc-price">₱350</div>
-        </div>
-      </div>
-    </div>
+<!-- ═══ HERO (Stitch Design) ═══ -->
+<section class="hero-stitch" id="heroSection">
+  <img 
+    class="hero-stitch-img" 
+    id="heroImg"
+    src="images/FB_IMG_1778471059522.jpg" 
+    alt="Tisoy Sushi Maki - Fresh Authentic Sushi"
+    onerror="this.src='images/FB_IMG_1778470820675.jpg'"
+  />
+  <div class="hero-stitch-overlay"></div>
+  <div class="hero-stitch-content">
+    <h1>
+      Authentic Sushi &amp; Maki<br>
+      <strong>Delivered Fresh</strong>
+    </h1>
+    <button class="btn-hero-order" onclick="document.querySelector('.stitch-cats').scrollIntoView({behavior:'smooth'})">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      Order Now
+    </button>
   </div>
 </section>
 
 <!-- INFO BAR -->
 <div class="info-bar">
   <div class="info-bar-inner">
-    <div class="info-chip"><span class="ic-icon">📍</span><div><div style="font-size:0.68rem;color:var(--gray)">Location</div><strong>Cityhomes Resortville, Dasmariñas, Cavite</strong></div></div>
+    <div class="info-chip">
+      <span class="ic-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00A651" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      </span>
+      <div><div style="font-size:0.68rem;color:var(--gray)">Location</div><strong>Cityhomes Resortville, Dasmariñas, Cavite</strong></div>
+    </div>
     <div class="info-divider"></div>
-    <div class="info-chip"><span class="ic-icon">🕘</span><div><div style="font-size:0.68rem;color:var(--gray)">Store Hours</div><strong>Mon–Sun · 10:00 AM – 9:00 PM</strong></div></div>
+    <div class="info-chip">
+      <span class="ic-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00A651" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </span>
+      <div><div style="font-size:0.68rem;color:var(--gray)">Store Hours</div><strong>Mon–Sun · 10:00 AM – 9:00 PM</strong></div>
+    </div>
     <div class="info-divider"></div>
-    <div class="info-chip"><span class="ic-icon">📞</span><div><div style="font-size:0.68rem;color:var(--gray)">Call / Text</div><strong>0995 450 8647</strong></div></div>
+    <div class="info-chip">
+      <span class="ic-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00A651" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.76a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      </span>
+      <div><div style="font-size:0.68rem;color:var(--gray)">Call / Text</div><strong>0995 450 8647</strong></div>
+    </div>
     <div class="info-divider"></div>
-    <div class="info-chip"><span class="ic-icon">🚀</span><div><div style="font-size:0.68rem;color:var(--gray)">Delivery</div><strong>Cavite &amp; Manila Areas</strong></div></div>
+    <div class="info-chip">
+      <span class="ic-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00A651" stroke-width="2" stroke-linecap="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      </span>
+      <div><div style="font-size:0.68rem;color:var(--gray)">Delivery</div><strong>Cavite &amp; Manila Areas</strong></div>
+    </div>
   </div>
+</div>
+
+<!-- ═══ STITCH CATEGORY TABS ═══ -->
+<div class="stitch-cats" id="stitchCats">
+  <!-- Dynamically built by JS -->
 </div>
 
 <!-- ═══ MAIN ═══ -->
@@ -145,18 +188,20 @@
   <!-- MENU AREA -->
   <main class="menu-area">
     <div class="search-wrap">
-      <span class="search-icon">🔍</span>
+      <span class="search-icon">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </span>
       <input 
         type="text" 
         id="menuSearch" 
         class="search-input" 
         placeholder="Search sushi, maki, rolls..."
         oninput="searchMenu(this.value)"/>
-      <button class="search-clear hidden" id="searchClear" onclick="clearSearch()">✕</button>
+      <button class="search-clear hidden" id="searchClear" onclick="clearSearch()">&#x2715;</button>
     </div>
     <div class="mobile-cats" id="mobileCats"></div>
     <div class="section-hd">
-      <h2 id="secTitle">🔥 Best Sellers</h2>
+      <h2 id="secTitle">Best Sellers</h2>
       <p id="secDesc">Our most-ordered sushi and maki rolls</p>
     </div>
     <div id="menuSections"></div>
@@ -166,9 +211,9 @@
   <aside class="cart-sidebar">
     <div class="cart-box">
       <div class="cart-hd">
-        <span>🛒</span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
         <h3>Your Order</h3>
-        <span id="cartOrderType" style="font-size:0.68rem;background:rgba(255,255,255,0.2);padding:3px 10px;border-radius:20px;font-weight:700;flex-shrink:0;">🛵 Delivery</span>
+        <span id="cartOrderType" style="font-size:0.68rem;background:rgba(255,255,255,0.2);padding:3px 10px;border-radius:20px;font-weight:700;flex-shrink:0;">Delivery</span>
       </div>
       <div class="cart-bd" id="desktopCartBd"></div>
       <div style="padding:0 14px 14px;" id="desktopCartSum"></div>
@@ -178,7 +223,8 @@
 
 <!-- FLOAT CART (mobile) -->
 <button class="float-cart" id="floatCart" onclick="openCartDrawer()">
-  🛒 View Order
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+  View Order
   <span class="fc-badge" id="fcCount">0</span>
   <span id="fcTotal">₱0</span>
 </button>
@@ -188,150 +234,427 @@
   <div class="drawer-bd" onclick="closeCartDrawer()"></div>
   <div class="drawer-sheet">
     <div class="drawer-handle"></div>
-    <div class="drawer-title">🛒 Your Order</div>
+    <div class="drawer-title">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      Your Order
+    </div>
     <div id="mobileCartBd"></div>
     <div id="mobileCartSum"></div>
   </div>
 </div>
 
-<!-- CHECKOUT MODAL -->
-<div class="overlay" id="checkoutModal">
-  <div class="modal">
-    <div class="modal-hd">
-      <h3>📋 Complete Your Order</h3>
-      <button class="modal-x" onclick="closeModal('checkoutModal')">✕</button>
-    </div>
-    <div class="modal-bd">
-      <div class="order-mini" id="checkoutSummary"></div>
-      <div class="form-row">
-        <div class="fg"><label>First Name *</label><input id="fname" placeholder="Juan" /></div>
-        <div class="fg"><label>Last Name *</label><input id="lname" placeholder="Dela Cruz" /></div>
-      </div>
-      <div class="fg"><label>Mobile Number *</label><input id="phone" type="tel" placeholder="09XX XXX XXXX" /></div>
-      <div class="fg">
-  <label>Delivery Address *</label>
-  <input type="text" id="deliveryAddress" placeholder="House #, Street, etc." required>
-</div>
+<!-- CHECKOUT MODAL — Stitch Design Full-Screen -->
+<div class="checkout-page" id="checkoutPage">
+  <!-- Dark green header -->
+  <div class="checkout-header">
+    <div class="ch-brand">Tisoy</div>
+    <div class="ch-sub">SUSHI MAKI</div>
+  </div>
+  <!-- Breadcrumb -->
+  <div class="checkout-breadcrumb">
+    <span>Cart</span>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+    <span class="crumb-active">Checkout</span>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+    <span>Confirmation</span>
+  </div>
+  <!-- Body -->
+  <div class="checkout-body">
+    <!-- Left: Form -->
+    <div>
+      <button class="checkout-back-btn" onclick="closeCheckoutPage()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+      </button>
+      <h2>Checkout</h2>
+      <div class="checkout-panel">
+        <h3>Delivery Details</h3>
+        <div class="checkout-field">
+          <label>Address</label>
+          <input type="text" id="deliveryAddress" placeholder="123 Main St, Barangay..." />
+        </div>
+        <div class="checkout-map-embed">
+          <div class="map-placeholder">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#388e3c" stroke-width="1.5" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>Map preview — enter address above</span>
+          </div>
+        </div>
 
-<label>Barangay / Area *</label>
-<input 
-  type="text" 
-  id="barangay" 
-  list="barangayList"
-  placeholder="Type or select barangay"
-  required>
+        <!-- Name & Phone (hidden pickup label) -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px">
+          <div class="checkout-field" style="margin:0">
+            <label>First Name *</label>
+            <input type="text" id="fname" placeholder="Juan" />
+          </div>
+          <div class="checkout-field" style="margin:0">
+            <label>Last Name *</label>
+            <input type="text" id="lname" placeholder="Dela Cruz" />
+          </div>
+        </div>
+        <div class="checkout-field" style="margin-top:12px">
+          <label>Mobile Number *</label>
+          <input type="tel" id="phone" placeholder="09XX XXX XXXX" />
+        </div>
+        <div class="checkout-field" id="barangayFieldWrap">
+          <label>Barangay / Area *</label>
+          <input type="text" id="barangay" list="barangayList2" placeholder="Type or select barangay" />
+          <datalist id="barangayList2">
+            <option value="Burol I"><option value="Burol II"><option value="Burol Main">
+            <option value="Langkaan I"><option value="Langkaan II">
+            <option value="Paliparan I"><option value="Paliparan II"><option value="Paliparan III">
+            <option value="Salitran I"><option value="Salitran II"><option value="Salitran III">
+            <option value="Sampaloc I"><option value="Sampaloc II">
+            <option value="San Agustin I"><option value="San Agustin II">
+            <option value="Santa Cruz I"><option value="Santa Cruz II">
+          </datalist>
+        </div>
+        <div class="checkout-field">
+          <label>Delivery Instructions <span style="color:var(--gray);font-weight:600">(Optional)</span></label>
+          <textarea id="notes" placeholder="Delivery Instructions (Optional)"></textarea>
+        </div>
 
-<datalist id="barangayList">
-  <option value="Burol I">
-  <option value="Burol II">
-  <option value="Burol III">
-  <option value="Burol Main">
-  <option value="Datu Esmael">
-  <option value="Emmanuel Bergado I">
-  <option value="Emmanuel Bergado II">
-  <option value="Fatima I">
-  <option value="Fatima II">
-  <option value="Fatima III">
-  <option value="H-2">
-  <option value="Langkaan I">
-  <option value="Langkaan II">
-  <option value="Luzviminda I">
-  <option value="Luzviminda II">
-  <option value="Paliparan I">
-  <option value="Paliparan II">
-  <option value="Paliparan III">
-  <option value="Sabang">
-  <option value="Saint Peter I">
-  <option value="Saint Peter II">
-  <option value="Salawag">
-  <option value="Salitran I">
-  <option value="Salitran II">
-  <option value="Salitran III">
-  <option value="Salitran IV">
-  <option value="Sampaloc I">
-  <option value="Sampaloc II">
-  <option value="Sampaloc III">
-  <option value="Sampaloc IV">
-  <option value="Sampaloc V">
-  <option value="San Agustin I">
-  <option value="San Agustin II">
-  <option value="San Agustin III">
-  <option value="San Andres I">
-  <option value="San Andres II">
-  <option value="San Antonio de Padua I">
-  <option value="San Antonio de Padua II">
-  <option value="San Dionisio">
-  <option value="San Esteban">
-  <option value="San Francisco I">
-  <option value="San Francisco II">
-  <option value="San Isidro Labrador I">
-  <option value="San Isidro Labrador II">
-  <option value="San Jose">
-  <option value="San Juan">
-  <option value="San Lorenzo Ruiz I">
-  <option value="San Lorenzo Ruiz II">
-  <option value="San Luis I">
-  <option value="San Luis II">
-  <option value="San Manuel I">
-  <option value="San Manuel II">
-  <option value="San Mateo">
-  <option value="San Miguel I">
-  <option value="San Miguel II">
-  <option value="San Nicolas I">
-  <option value="San Nicolas II">
-  <option value="San Roque">
-  <option value="San Simon">
-  <option value="Santa Cristina I">
-  <option value="Santa Cristina II">
-  <option value="Santa Cruz I">
-  <option value="Santa Cruz II">
-  <option value="Santa Fe">
-  <option value="Santa Lucia">
-  <option value="Santa Maria">
-  <option value="Santo Cristo">
-  <option value="Santo Niño I">
-  <option value="Santo Niño II">
-  <option value="Victoria Reyes">
-  <option value="Zone I">
-  <option value="Zone I-B">
-  <option value="Zone II">
-  <option value="Zone III">
-  <option value="Zone IV">
-</datalist>
-      <div class="fg">
-        <label>Special Instructions <span style="color:var(--gray);font-weight:600">(optional)</span></label>
-        <textarea id="notes" placeholder="e.g. Extra soy sauce, no wasabi..."></textarea>
-      </div>
-      <div class="fg">
-        <label>Payment Method</label>
-        <div class="pay-grid">
-          <div class="pay-opt sel" onclick="selPay(this,'cod')"><div class="pay-icon">💵</div>Cash on Delivery</div>
-          <div class="pay-opt" onclick="selPay(this,'gcash')"><div class="pay-icon">📱</div>GCash</div>
-          <div class="pay-opt" onclick="selPay(this,'maya')"><div class="pay-icon">💳</div>Maya</div>
-          <div class="pay-opt" onclick="selPay(this,'bank')"><div class="pay-icon">🏦</div>Bank Transfer</div>
+        <!-- Payment Method -->
+        <h3 style="margin-top:8px;margin-bottom:14px">Payment Method</h3>
+        <div class="pay-method-grid">
+          <div class="pay-method-card active" onclick="selectPayMethod(this,'cod')" id="pm-cod">
+            <div class="pay-method-icon">
+              <svg width="32" height="22" viewBox="0 0 32 22" fill="none"><rect x="1" y="1" width="30" height="20" rx="3" stroke="#666" stroke-width="1.5"/><rect x="1" y="6" width="30" height="5" fill="#ddd"/></svg>
+            </div>
+            <span>Cash on Delivery</span>
+          </div>
+          <div class="pay-method-card" onclick="selectPayMethod(this,'gcash')" id="pm-gcash">
+            <div class="pay-method-icon">
+              <div style="width:32px;height:32px;background:#007aff;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:.9rem">G</div>
+            </div>
+            <span>GCash</span>
+          </div>
+          <div class="pay-method-card" onclick="selectPayMethod(this,'maya')" id="pm-maya">
+            <div class="pay-method-icon">
+              <div style="width:32px;height:32px;background:#1a1a1a;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#00d632;font-weight:900;font-size:.75rem">maya</div>
+            </div>
+            <span>Maya</span>
+          </div>
+        </div>
+        <!-- Card fields (show when credit card selected) -->
+        <div class="pay-card-fields" id="cardFields">
+          <div class="checkout-field" style="margin-top:14px">
+            <label>Card Number</label>
+            <input type="text" placeholder="Card Number" maxlength="19" />
+          </div>
+          <div class="pay-card-row">
+            <div class="checkout-field" style="margin:0">
+              <label>Expiry</label>
+              <input type="text" placeholder="MM/YY" maxlength="5" />
+            </div>
+            <div class="checkout-field" style="margin:0">
+              <label>CVV</label>
+              <input type="text" placeholder="CVV" maxlength="4" />
+            </div>
+          </div>
+          <div class="checkout-field" style="margin-top:12px">
+            <label>Cardholder Name</label>
+            <input type="text" placeholder="Name on card" />
+          </div>
         </div>
       </div>
-      <button class="place-btn" onclick="placeOrder()">🚀 Place Order</button>
+    </div>
+
+    <!-- Right: Order Summary -->
+    <div>
+      <div class="order-summary-box">
+        <h3>Order Summary</h3>
+        <div id="checkoutOrderItems"><!-- filled by JS --></div>
+        <div class="osb-subtotals">
+          <div class="osb-row">
+            <span>Subtotal:</span>
+            <span id="checkoutSubtotal">₱0</span>
+          </div>
+          <div class="osb-row">
+            <span>Delivery Fee:</span>
+            <span style="color:#e67e00;font-weight:800">Via Lalamove</span>
+          </div>
+          <div class="osb-total">
+            <span>Total</span>
+            <span id="checkoutTotal">₱0</span>
+          </div>
+        </div>
+        <button class="place-order-btn" onclick="placeOrderStitch()">Place Order</button>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- SUCCESS MODAL -->
-<div class="overlay" id="successModal">
-  <div class="modal">
-    <div class="success-body">
-      <div class="s-icon">🎉</div>
-      <h2>Order Confirmed!</h2>
-      <p>Salamat! Your sushi order has been received.<br>We'll contact you shortly to confirm.</p>
-      <div class="order-num" id="orderNumEl">#TSM-0001</div>
-      <div class="contact-info">
-        <p>📞 <strong>0995 450 8647</strong></p>
-        <p>💬 WhatsApp: <strong>+63 991 675 8883</strong></p>
-        <p>📧 <strong>bayanileonilo@gmail.com</strong></p>
+<!-- ORDER CONFIRMATION (Stitch Design Full-Screen) -->
+<div class="confirm-page" id="confirmPage">
+  <!-- Nav -->
+  <div class="confirm-nav">
+    <a href="#" class="cn-logo" onclick="closeConfirmPage(); return false;">
+      <div class="logo-icon" style="width:36px;height:36px;background:var(--primary);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+        <svg width="20" height="20" viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="10" fill="white" opacity="0.9"/><circle cx="18" cy="18" r="6" fill="#E63939"/></svg>
       </div>
-      <p style="font-size:0.78rem;color:var(--gray);">For updates, please save our contact number.<br>Estimated delivery: <strong>30–60 minutes</strong></p>
-      <button class="s-close" onclick="closeSuccess()">Continue Shopping 🍣</button>
+      Tisoy Sushi Maki
+    </a>
+    <div style="display:flex;align-items:center;gap:8px;color:var(--text-muted);font-size:.83rem;font-weight:700">
+      Menu &nbsp;·&nbsp; About &nbsp;·&nbsp; Reservations
+      <button onclick="closeConfirmPage()" style="background:none;border:none;cursor:pointer;margin-left:8px">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      </button>
     </div>
+  </div>
+  <!-- Body -->
+  <div class="confirm-body">
+    <div class="confirm-check-icon">
+      <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#E63939" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h1>Order Placed Successfully!</h1>
+    <p class="confirm-sub">Thank you for choosing Tisoy Sushi Maki. Your exquisite sushi experience is being prepared.</p>
+    <div class="confirm-order-num" id="confirmOrderNum">Order Number: #TSM-9823</div>
+
+    <!-- Next Steps progress -->
+    <div class="next-steps-wrap">
+      <h3>Next Steps</h3>
+      <div class="next-steps-bar">
+        <div class="nsb-progress" style="width:40%"></div>
+        <div class="ns-step">
+          <div class="ns-dot active">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <span class="ns-label active">Kitchen is preparing<br>your sushi</span>
+        </div>
+        <div class="ns-step">
+          <div class="ns-dot">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2.5" stroke-linecap="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          </div>
+          <span class="ns-label">In Transit</span>
+        </div>
+        <div class="ns-step">
+          <div class="ns-dot">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="ns-label">Delivered</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order summary -->
+    <div class="confirm-summary-box">
+      <div class="csb-items">
+        <div id="confirmSummaryItems"><!-- filled by JS --></div>
+        <div class="csb-totals">
+          <div class="csb-total-row"><span>Subtotal</span><span id="confirmSubtotal">₱0</span></div>
+          <div class="csb-total-row"><span>Delivery Fee</span><span style="color:#e67e00;font-weight:800">Via Lalamove</span></div>
+          <div class="csb-grand"><span>Total</span><span id="confirmTotal">₱0</span></div>
+        </div>
+      </div>
+      <div class="csb-delivery">
+        <h4>Delivery Address:</h4>
+        <p id="confirmAddress">Your delivery address</p>
+        <div class="eta-label">Estimated Arrival Time:</div>
+        <p>Today, 30–60 minutes</p>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="confirm-actions">
+      <button class="btn-track-order" onclick="openTrackingPage()">Track My Order</button>
+      <button class="btn-return-home" onclick="closeConfirmPage()">Return to Home</button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="confirm-footer">
+    <div style="display:flex;gap:20px">
+      <a href="#" style="color:inherit;text-decoration:none">Contact Us</a>
+      <a href="#" style="color:inherit;text-decoration:none">Privacy Policy</a>
+      <a href="#" style="color:inherit;text-decoration:none">Terms of Service</a>
+    </div>
+    <div style="display:flex;gap:14px">
+      <a href="https://www.facebook.com/share/18KwaefxXj/" target="_blank" style="color:#1877F2">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.235 2.686.235v2.97h-1.514c-1.491 0-1.956.93-1.956 1.874v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+      </a>
+      <a href="https://instagram.com" target="_blank" style="color:#e4405f">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- LIVE ORDER TRACKING (Stitch Design) -->
+<div class="tracking-page" id="trackingPage">
+  <div class="tracking-nav">
+    <div class="tn-logo">
+      <div class="logo-icon" style="width:40px;height:40px;background:var(--primary);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+        <svg width="22" height="22" viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="10" fill="white" opacity="0.9"/><circle cx="18" cy="18" r="6" fill="#E63939"/></svg>
+      </div>
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-weight:900">Tisoy</div>
+        <div style="font-size:.65rem;opacity:.65;letter-spacing:1px">Sushi Maki</div>
+      </div>
+    </div>
+    <div class="tn-links">
+      <a href="#">Menu</a>
+      <a href="#">Locations</a>
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+    </div>
+    <div style="display:flex;gap:12px;align-items:center">
+      <button onclick="closeTrackingPage()" style="background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:.82rem;font-weight:700;display:flex;align-items:center;gap:5px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+      </button>
+    </div>
+  </div>
+
+  <div class="tracking-body">
+    <!-- Map background -->
+    <div class="tracking-map-bg">
+      <!-- Fake road grid -->
+      <div class="map-road-h" style="top:25%"></div>
+      <div class="map-road-h" style="top:50%"></div>
+      <div class="map-road-h" style="top:75%"></div>
+      <div class="map-road-v" style="left:25%"></div>
+      <div class="map-road-v" style="left:50%"></div>
+      <div class="map-road-v" style="left:75%"></div>
+      <!-- Route line SVG -->
+      <div class="map-route-line">
+        <svg viewBox="0 0 200 200" fill="none">
+          <path d="M 180 20 Q 100 80 40 160" stroke="#1a3d2a" stroke-width="3" stroke-dasharray="8 4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <!-- Restaurant pin -->
+      <div class="map-restaurant-pin">
+        <div class="pin-icon">🍱</div>
+        <div class="pin-info">
+          <h4>Tisoy Sushi Maki</h4>
+          <p>Dasmariñas, Cavite</p>
+        </div>
+      </div>
+      <!-- Rider pin -->
+      <div class="map-rider-pin">
+        <div class="map-rider-label">Rider: Kuya Rider 🛵</div>
+        <div class="map-rider-icon">🚴</div>
+      </div>
+      <!-- ETA overlay -->
+      <div class="map-eta-box">
+        <div class="eta-text">Estimated Arrival</div>
+        <div class="eta-time" id="trackingETA">~45 min</div>
+      </div>
+    </div>
+
+    <!-- Tracking side panel -->
+    <div class="tracking-panel">
+      <div class="tracking-panel-label">Live Order Tracking</div>
+      
+      <div class="tracking-status-main">
+        <div class="status-emoji">🛵🍱</div>
+        <div>
+          <h2>Rider is on<br>the way</h2>
+          <div class="tracking-eta" id="trackingETAPanel">ETA: ~45 min</div>
+        </div>
+      </div>
+
+      <div class="rider-card">
+        <div class="rider-avatar">🧑</div>
+        <div class="rider-info">
+          <h3>Kuya Rider</h3>
+          <div class="rider-rating">★★★★★ 4.9/5</div>
+          <button class="contact-rider-btn" onclick="window.open('tel:0995-450-8647')">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.76a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            Contact Store
+          </button>
+        </div>
+      </div>
+
+      <!-- Status timeline -->
+      <div class="status-timeline">
+        <div class="st-item">
+          <div class="st-dot-wrap">
+            <div class="st-dot done"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="st-line done"></div>
+          </div>
+          <div class="st-content">
+            <h4>Order Received</h4>
+            <p id="orderReceivedTime">Just now</p>
+          </div>
+        </div>
+        <div class="st-item">
+          <div class="st-dot-wrap">
+            <div class="st-dot done"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="st-line done"></div>
+          </div>
+          <div class="st-content">
+            <h4>Preparing</h4>
+            <p id="preparingTime">Kitchen is working on it</p>
+          </div>
+        </div>
+        <div class="st-item">
+          <div class="st-dot-wrap">
+            <div class="st-dot current"></div>
+            <div class="st-line"></div>
+          </div>
+          <div class="st-content">
+            <h4 class="current">Out for Delivery</h4>
+            <p>Rider is heading your way</p>
+          </div>
+        </div>
+        <div class="st-item">
+          <div class="st-dot-wrap">
+            <div class="st-dot"></div>
+          </div>
+          <div class="st-content">
+            <h4>Arriving Soon</h4>
+          </div>
+        </div>
+      </div>
+
+      <div class="tracking-actions">
+        <button class="btn-view-receipt" onclick="closeTrackingPage()">View Receipt</button>
+        <button class="btn-need-help" onclick="window.open('https://wa.me/639916758883','_blank')">Need Help?</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REVIEW MODAL (Stitch Design) -->
+<div class="review-modal-overlay" id="reviewModal">
+  <div class="review-modal">
+    <button class="review-close-btn" onclick="closeReviewModal()">&#x2715;</button>
+    <h2>How was your meal?</h2>
+    <!-- Sushi roll emoji rating -->
+    <div class="sushi-rating" id="sushiRating">
+      <button class="sushi-roll-btn lit" onclick="setSushiRating(1)" title="1 roll">🍣</button>
+      <button class="sushi-roll-btn lit" onclick="setSushiRating(2)" title="2 rolls">🍣</button>
+      <button class="sushi-roll-btn lit" onclick="setSushiRating(3)" title="3 rolls">🍣</button>
+      <button class="sushi-roll-btn lit" onclick="setSushiRating(4)" title="4 rolls">🍣</button>
+      <button class="sushi-roll-btn" onclick="setSushiRating(5)" title="5 rolls">🍣</button>
+    </div>
+    <!-- Category sliders -->
+    <div class="review-slider-wrap">
+      <div class="review-slider-row">
+        <span class="rsr-label">Food Quality</span>
+        <input type="range" class="rsr-slider" min="1" max="5" value="4" oninput="updateSlider(this,this.value)" style="--pct:80%">
+        <div class="rsr-stars">★★★★☆</div>
+      </div>
+      <div class="review-slider-row">
+        <span class="rsr-label">Packaging</span>
+        <input type="range" class="rsr-slider" min="1" max="5" value="4" oninput="updateSlider(this,this.value)" style="--pct:80%">
+        <div class="rsr-stars">★★★★☆</div>
+      </div>
+      <div class="review-slider-row">
+        <span class="rsr-label">Delivery Speed</span>
+        <input type="range" class="rsr-slider" min="1" max="5" value="4" oninput="updateSlider(this,this.value)" style="--pct:80%">
+        <div class="rsr-stars">★★★★☆</div>
+      </div>
+    </div>
+    <!-- Comment + photos -->
+    <div class="review-textarea-row">
+      <textarea class="review-textarea" placeholder="Share your thoughts..."></textarea>
+      <button class="add-photos-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        Add Photos
+      </button>
+    </div>
+    <button class="submit-review-btn" onclick="submitReview()">Submit Review</button>
   </div>
 </div>
 
@@ -339,8 +662,8 @@
 <div class="overlay" id="locationModal">
   <div class="modal">
     <div class="modal-hd">
-      <h3>📍 Set Your Location</h3>
-      <button class="modal-x" onclick="closeModal('locationModal')">✕</button>
+      <h3>Set Your Location</h3>
+      <button class="modal-x" onclick="closeModal('locationModal')">&#x2715;</button>
     </div>
     <div class="modal-bd">
       <div class="fg"><label>Full Delivery Address</label><input id="locInput" placeholder="House No., Street, Barangay..." /></div>
@@ -369,58 +692,92 @@
 <div class="toast" id="toast"></div>
 
 <!-- ADMIN FAB & PANEL -->
-<!-- ADMIN FLOATING BUTTONS - Only visible to Owner -->
 <div id="adminControls" style="display: none;">
-  <!-- Gear Icon - Status & Announcements -->
-  <div class="admin-fab" id="adminFab" onclick="toggleAdminPanel()" title="Owner Panel - Status & Announcements">⚙️</div>
-<div class="admin-fab add-menu-fab" id="addMenuFab" onclick="showAddMenuModal()" title="Add New Menu Item">➕</div>
+  <div class="admin-fab" id="adminFab" onclick="toggleAdminPanel()" title="Owner Panel - Status & Announcements">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+  </div>
+  <div class="admin-fab add-menu-fab" id="addMenuFab" onclick="showAddMenuModal()" title="Add New Menu Item">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  </div>
 </div>
 <div class="admin-panel" id="adminPanel">
-  <h4>⚙️ Owner Panel</h4>
+  <h4>Owner Panel</h4>
   <div class="admin-toggle-row">
     <span><span class="admin-status-dot" id="adminDot"></span> Temporarily Closed</span>
     <div class="toggle-switch" id="adminToggle" onclick="toggleOwnerClosed()"></div>
   </div>
   <div class="admin-msg-area" id="adminMsgArea">
     <label>Custom message for customers:</label>
-    <textarea id="adminMsgInput" placeholder="e.g. Closed today for a family event. Back tomorrow at 10AM! 🙏"></textarea>
+    <textarea id="adminMsgInput" placeholder="e.g. Closed today for a family event. Back tomorrow at 10AM!"></textarea>
   </div>
-  <button class="admin-apply-btn" onclick="applyOwnerStatus()">✅ Apply &amp; Publish</button>
+  <button class="admin-apply-btn" onclick="applyOwnerStatus()">Apply &amp; Publish</button>
 </div>
-
-<!-- WHATSAPP FLOAT -->
 
 <!-- ═══ FOOTER ═══ -->
 <footer>
   <div class="footer-inner">
     <div class="footer-brand">
-      <div class="fb-logo">TISOY SUSHI <span>MAKI</span></div>
-      <p>Fresh, authentic sushi and maki rolls made daily. Serving Cavite &amp; Manila with love and quality ingredients. ✅ Verified Business</p>
+      <div class="fb-logo-wrap">
+        <!-- Footer SVG Logo -->
+        <svg width="32" height="32" viewBox="0 0 48 48" fill="none" style="flex-shrink:0">
+          <rect width="48" height="48" rx="10" fill="#00A651"/>
+          <circle cx="24" cy="24" r="14" fill="white" opacity="0.15"/>
+          <circle cx="24" cy="24" r="10" fill="white" opacity="0.9"/>
+          <circle cx="24" cy="24" r="6" fill="#E63939"/>
+          <circle cx="20.5" cy="20.5" r="2" fill="white" opacity="0.6"/>
+        </svg>
+        <div class="fb-logo">TISOY SUSHI <span>MAKI</span></div>
+      </div>
+      <p>Fresh, authentic sushi and maki rolls made daily. Serving Cavite &amp; Manila with love and quality ingredients.</p>
       <div class="footer-social">
-  <a class="f-social" href="https://www.facebook.com/share/18KwaefxXj/" target="_blank" title="Facebook">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.235 2.686.235v2.97h-1.514c-1.491 0-1.956.93-1.956 1.874v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
-  </a>
-  <a class="f-social" href="https://wa.me/639916758883" target="_blank" title="WhatsApp">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-  </a>
-  <a class="f-social" href="mailto:bayanileonilo@gmail.com" title="Email">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="#EA4335"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 010 19.366V5.457c0-.904.732-1.636 1.636-1.636h.749L12 10.87l9.615-7.049h.749C23.268 3.821 24 4.553 24 5.457z"/></svg>
-  </a>
+        <a class="f-social" href="https://www.facebook.com/share/18KwaefxXj/" target="_blank" title="Facebook">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.235 2.686.235v2.97h-1.514c-1.491 0-1.956.93-1.956 1.874v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+        </a>
+        <a class="f-social" href="https://wa.me/639916758883" target="_blank" title="WhatsApp">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        </a>
+        <a class="f-social" href="mailto:bayanileonilo@gmail.com" title="Email">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#EA4335"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 010 19.366V5.457c0-.904.732-1.636 1.636-1.636h.749L12 10.87l9.615-7.049h.749C23.268 3.821 24 4.553 24 5.457z"/></svg>
+        </a>
       </div>
     </div>
     <div class="footer-col">
       <h4>Contact Us</h4>
-      <p>📞 0995 450 8647</p>
-      <p>💬 +63 991 675 8883 (WhatsApp)</p>
-      <p>📧 bayanileonilo@gmail.com</p>
-      <p>📍 Cityhomes Resortville,<br>&nbsp;&nbsp;&nbsp;&nbsp;Dasmariñas, Cavite 4114</p>
+      <p>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="vertical-align:middle;margin-right:5px;opacity:.7"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.76a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        0995 450 8647
+      </p>
+      <p>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="#25D366" style="vertical-align:middle;margin-right:5px"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        +63 991 675 8883 (WhatsApp)
+      </p>
+      <p>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="vertical-align:middle;margin-right:5px;opacity:.7"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        bayanileonilo@gmail.com
+      </p>
+      <p>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="vertical-align:middle;margin-right:5px;opacity:.7"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Cityhomes Resortville,<br>&nbsp;&nbsp;&nbsp;&nbsp;Dasmariñas, Cavite 4114
+      </p>
     </div>
     <div class="footer-col">
       <h4>Store Info</h4>
-      <p>🕘 Mon–Sun: 10:00 AM – 9:00 PM</p>
-      <p>🛵 Delivery: via Lalamove</p>
-      <p>🏃 Pick Up available</p>
-      <a href="https://www.facebook.com/share/18KwaefxXj/" target="_blank">📘 Visit our Facebook Page</a>
+      <p>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="vertical-align:middle;margin-right:5px;opacity:.7"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Mon–Sun: 10:00 AM – 9:00 PM
+      </p>
+      <p>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="vertical-align:middle;margin-right:5px;opacity:.7"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        Delivery: via Lalamove
+      </p>
+      <p>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="vertical-align:middle;margin-right:5px;opacity:.7"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        Pick Up available
+      </p>
+      <a href="https://www.facebook.com/share/18KwaefxXj/" target="_blank">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="#1877F2" style="vertical-align:middle;margin-right:5px"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.235 2.686.235v2.97h-1.514c-1.491 0-1.956.93-1.956 1.874v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+        Visit our Facebook Page
+      </a>
     </div>
   </div>
   <div class="footer-bottom">© 2025 Tisoy Sushi Maki · Dasmariñas, Cavite · All rights reserved.</div>
@@ -431,21 +788,16 @@
   <div class="modal item-detail-modal">
     <div class="modal-hd">
       <h3>Item Details</h3>
-      <button class="modal-x" onclick="closeItemModal()">✕</button>
+      <button class="modal-x" onclick="closeItemModal()">&#x2715;</button>
     </div>
     <div class="modal-bd">
-      <!-- Image -->
       <img id="modalImage" src="" alt="" class="modal-item-img">
-
       <h2 id="modalName"></h2>
       <p id="modalDesc" class="modal-desc"></p>
-
-      <!-- Variants / Price -->
       <div id="modalVariants"></div>
       <div class="modal-price" id="modalPrice"></div>
-
       <button id="modalAddBtn" class="add-btn-large">
-        ＋ Add to Order
+        + Add to Order
       </button>
     </div>
   </div>
@@ -455,12 +807,10 @@
 <div class="overlay" id="adminEditModal" style="display: none;">
   <div class="modal admin-edit-modal">
     <div class="modal-hd">
-      <h3>✏️ Edit Item</h3>
-      <button class="modal-x" onclick="closeAdminEditModal()">✕</button>
+      <h3>Edit Item</h3>
+      <button class="modal-x" onclick="closeAdminEditModal()">&#x2715;</button>
     </div>
-    <div class="modal-bd" id="editModalBody">
-      <!-- Filled dynamically by JavaScript -->
-    </div>
+    <div class="modal-bd" id="editModalBody"></div>
   </div>
 </div>
 
@@ -468,16 +818,14 @@
 <div class="overlay" id="addMenuModal" style="display: none;">
   <div class="modal admin-edit-modal" style="max-width: 500px;">
     <div class="modal-hd">
-      <h3>➕ Add New Menu Item</h3>
-      <button class="modal-x" onclick="closeAddMenuModal()">✕</button>
+      <h3>Add New Menu Item</h3>
+      <button class="modal-x" onclick="closeAddMenuModal()">&#x2715;</button>
     </div>
-    <div class="modal-bd" id="addMenuBody">
-      <!-- Populated by JS -->
-    </div>
+    <div class="modal-bd" id="addMenuBody"></div>
   </div>
 </div>
   
-<!-- ═══ SCRIPTS (load order matters) ═══ -->
+<!-- ═══ SCRIPTS ═══ -->
 <script src="js/data.js"></script>
 <script src="js/store.js"></script>
 <script src="js/cart.js"></script>
@@ -485,5 +833,28 @@
 <script src="js/admin.js"></script>
 <script src="js/app.js"></script>
 
+<!-- Theme toggle script (must be after body) -->
+<script>
+  // Initialize theme from localStorage
+  (function() {
+    const saved = localStorage.getItem('tsm-theme') || 'light';
+    document.documentElement.setAttribute('data-theme', saved);
+  })();
+
+  function toggleTheme() {
+    const html = document.documentElement;
+    const current = html.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('tsm-theme', next);
+  }
+</script>
+<script
+  src="https://www.tuqlas.com/chatbot.js"
+  data-key="tq_live_af07c20f44544402f8f3f16d4e62f619f0a15a49"
+  data-api="https://www.tuqlas.com"
+  defer
+></script>
+  
 </body>
 </html>

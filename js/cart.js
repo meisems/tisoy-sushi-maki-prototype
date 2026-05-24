@@ -92,7 +92,7 @@ function renderCart() {
 
   // HTML blocks
   const bodyHTML = cnt === 0
-    ? `<div class="cart-empty"><div class="e-icon">🍣</div><p>Your cart is empty.<br>Add your favorite sushi!</p></div>`
+    ? `<div class="cart-empty"><div class="e-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></div><p>Your cart is empty.<br>Add your favorite sushi!</p></div>`
     : items.map(cartItemHTML).join('');
   const sumHTML = cnt > 0 ? cartSumHTML(sub, tot) : '';
 

@@ -11,7 +11,7 @@ function openCheckout() {
     return; 
   }
   if (cartCount() === 0) {
-    showToast('🛒 Your cart is empty!');
+    showToast('Your cart is empty!');
     return;
   }
 
@@ -20,7 +20,7 @@ function openCheckout() {
   const items = cartItems();
   const tot = total();
 
-  let html = `<h4>🍣 Order Summary</h4>`;
+  let html = `<h4>Order Summary</h4>`;
 
   items.forEach(i => {
     const itemTotal = i.price * i.qty;
@@ -144,7 +144,7 @@ function placeOrder() {
     closeModal('checkoutModal');
     document.getElementById('orderNumEl').textContent = orderNum;
     openModal('successModal');
-    showToast('✅ Order sent successfully!');
+    showToast('Order sent!');
 
   } catch (err) {
     console.error("Place Order Error:", err);

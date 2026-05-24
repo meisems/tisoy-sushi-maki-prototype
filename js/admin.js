@@ -37,6 +37,12 @@ async function initAdmin() {
 
   window.adminMenu = adminMenu;
   if (typeof buildSections === 'function') buildSections();
+
+  // buildSections() recreates all .menu-section divs without the .visible class,
+  // so the active category becomes hidden. Restore visibility here.
+  const restoreCat = typeof activeCat !== 'undefined' ? activeCat : 'bakedsushi';
+  const setActive = window.setActiveCat || (typeof setActiveCat === 'function' && setActiveCat);
+  if (setActive) setActive(restoreCat);
 }
 
 function checkAdminAccess() {
@@ -581,6 +587,10 @@ function _clearPreviewBox(prefix) {
 
 // ==================== GLOBAL ACCESS & INIT ====================
 window.initAdmin = initAdmin;
+window.toggleAdminFeedback   = toggleAdminFeedback;
+window.loadAdminFeedback     = loadAdminFeedback;
+window.toggleFeedbackFeature = toggleFeedbackFeature;
+window.deleteAdminFeedback   = deleteAdminFeedback;
 window.toggleAdminPanel = toggleAdminPanel;
 window.toggleOwnerClosed = toggleOwnerClosed;
 window.applyOwnerStatus = applyOwnerStatus;
@@ -601,3 +611,89 @@ window.updateImgPreview = updateImgPreview;
 window.clearImgPreview = clearImgPreview;
 
 document.addEventListener('DOMContentLoaded', initAdmin);
+
+// ==================== ADMIN FEEDBACK MANAGEMENT ====================
+
+let _feedbackOpen = false;
+
+function toggleAdminFeedback() {
+  _feedbackOpen = !_feedbackOpen;
+  const body    = document.getElementById('adminFeedbackBody');
+  const chevron = document.querySelector('.feedback-chevron');
+  if (body)    body.style.display    = _feedbackOpen ? 'block' : 'none';
+  if (chevron) chevron.classList.toggle('open', _feedbackOpen);
+  if (_feedbackOpen) loadAdminFeedback();
+}
+
+async function loadAdminFeedback() {
+  const list = document.getElementById('adminFeedbackList');
+  if (!list) return;
+  list.innerHTML = '<p style="color:var(--text-muted);font-size:.8rem;padding:6px 0">Loading…</p>';
+
+  try {
+    const res  = await fetch('/api/feedback/all');
+    const data = await res.json();
+
+    // Update count badge
+    const badge = document.getElementById('feedbackBadge');
+    if (badge) {
+      badge.textContent = data.length;
+      badge.style.display = data.length > 0 ? 'inline' : 'none';
+    }
+
+    if (!data.length) {
+      list.innerHTML = '<p style="color:var(--text-muted);font-size:.8rem;padding:6px 0">No feedback yet.</p>';
+      return;
+    }
+
+    list.innerHTML = data.map(fb => {
+      const stars   = '★'.repeat(fb.rating) + '☆'.repeat(5 - fb.rating);
+      const date    = new Date(fb.createdAt).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' });
+      const featCls = fb.featured ? 'feature-on' : '';
+      const featLbl = fb.featured ? '⭐ Featured' : '☆ Feature';
+      return `
+        <div class="admin-fb-card" id="afc-${fb._id}">
+          <div class="admin-fb-card-top">
+            <span class="admin-fb-stars">${stars}</span>
+            <span class="admin-fb-name">${fb.name || 'Anonymous'}</span>
+            <span class="admin-fb-date">${date}</span>
+          </div>
+          <div class="admin-fb-text">"${fb.comment}"</div>
+          <div class="admin-fb-actions">
+            <button class="admin-fb-btn ${featCls}" onclick="toggleFeedbackFeature('${fb._id}', this)">${featLbl}</button>
+            <button class="admin-fb-btn del-btn" onclick="deleteAdminFeedback('${fb._id}')">🗑️ Delete</button>
+          </div>
+        </div>`;
+    }).join('');
+  } catch (e) {
+    list.innerHTML = '<p style="color:var(--text-muted);font-size:.8rem">Could not load feedback.</p>';
+  }
+}
+
+async function toggleFeedbackFeature(id, btn) {
+  try {
+    const res  = await fetch(`/api/feedback/${id}/toggle`, { method: 'POST' });
+    const data = await res.json();
+    if (btn) {
+      btn.classList.toggle('feature-on', data.featured);
+      btn.textContent = data.featured ? '⭐ Featured' : '☆ Feature';
+    }
+    // Refresh the public strip
+    if (typeof loadFeaturedReviews === 'function') loadFeaturedReviews();
+    showToast(data.featured ? '⭐ Review featured!' : 'Review unfeatured');
+  } catch (e) {
+    showToast('⚠️ Could not update review');
+  }
+}
+
+async function deleteAdminFeedback(id) {
+  if (!confirm('Delete this feedback permanently?')) return;
+  try {
+    await fetch(`/api/feedback/${id}`, { method: 'DELETE' });
+    document.getElementById('afc-' + id)?.remove();
+    if (typeof loadFeaturedReviews === 'function') loadFeaturedReviews();
+    showToast('🗑️ Feedback deleted');
+  } catch (e) {
+    showToast('⚠️ Could not delete feedback');
+  }
+}

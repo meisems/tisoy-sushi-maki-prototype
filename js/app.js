@@ -57,11 +57,14 @@ function buildNavs() {
 
   // Same SVG icons used by the stitch tabs
   const catIcons = {
-    bakedsushi: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="14" width="32" height="22" rx="4" stroke="currentColor" stroke-width="2.5"/><path d="M14 14 Q 24 8 34 14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M16 22h16M16 28h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M10 10 Q 24 4 38 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".4"/></svg>`,
-    makirolls:  `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="14" stroke="currentColor" stroke-width="2.5"/><circle cx="24" cy="24" r="8" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="24" r="3" fill="currentColor" opacity=".5"/><circle cx="16" cy="18" r="5" stroke="currentColor" stroke-width="2" opacity=".7"/></svg>`,
-    platters:   `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="12" width="36" height="26" rx="4" stroke="currentColor" stroke-width="2.5"/><rect x="10" y="16" width="28" height="6" rx="2" stroke="currentColor" stroke-width="2"/><rect x="10" y="26" width="13" height="8" rx="2" stroke="currentColor" stroke-width="2"/><rect x="25" y="26" width="13" height="8" rx="2" stroke="currentColor" stroke-width="2"/></svg>`,
-    kanisalad:  `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 36 Q24 14 38 36" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><ellipse cx="24" cy="36" rx="14" ry="4" stroke="currentColor" stroke-width="2"/><path d="M18 28 Q24 20 30 28" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="24" cy="18" r="4" stroke="currentColor" stroke-width="2"/></svg>`,
-    harumakisalad:`<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="12" y="10" width="24" height="30" rx="12" stroke="currentColor" stroke-width="2.5"/><path d="M18 20 Q 24 16 30 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M18 26 Q 24 22 30 26" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".6"/><path d="M18 32 Q 24 28 30 32" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".3"/></svg>`,
+    bakedsushi:   `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="14" width="32" height="22" rx="4" stroke="currentColor" stroke-width="2.5"/><path d="M14 14 Q 24 8 34 14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M16 22h16M16 28h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M10 10 Q 24 4 38 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".4"/></svg>`,
+    maki:         `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="14" stroke="currentColor" stroke-width="2.5"/><circle cx="24" cy="24" r="8" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="24" r="3" fill="currentColor" opacity=".5"/><circle cx="16" cy="18" r="5" stroke="currentColor" stroke-width="2" opacity=".7"/></svg>`,
+    platters:     `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="12" width="36" height="26" rx="4" stroke="currentColor" stroke-width="2.5"/><rect x="10" y="16" width="28" height="6" rx="2" stroke="currentColor" stroke-width="2"/><rect x="10" y="26" width="13" height="8" rx="2" stroke="currentColor" stroke-width="2"/><rect x="25" y="26" width="13" height="8" rx="2" stroke="currentColor" stroke-width="2"/></svg>`,
+    kanisalad:    `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 36 Q24 14 38 36" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><ellipse cx="24" cy="36" rx="14" ry="4" stroke="currentColor" stroke-width="2"/><path d="M18 28 Q24 20 30 28" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="24" cy="18" r="4" stroke="currentColor" stroke-width="2"/></svg>`,
+    haru:         `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="12" y="10" width="24" height="30" rx="12" stroke="currentColor" stroke-width="2.5"/><path d="M18 20 Q 24 16 30 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M18 26 Q 24 22 30 26" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".6"/><path d="M18 32 Q 24 28 30 32" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".3"/></svg>`,
+    birthdaysets: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="22" width="32" height="18" rx="3" stroke="currentColor" stroke-width="2.5"/><path d="M8 30h32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M16 22v-4M24 22v-6M32 22v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M16 18 Q16 14 20 14 Q16 14 16 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/><path d="M24 16 Q24 12 28 12 Q24 12 24 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/><path d="M32 18 Q32 14 36 14 Q32 14 32 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg>`,
+    partysets:    `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 38 L20 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M20 12 Q30 6 36 14 Q40 20 34 26 Q28 32 20 28 Q14 26 10 38" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/><circle cx="32" cy="14" r="2" fill="currentColor" opacity=".5"/><circle cx="38" cy="10" r="1.5" fill="currentColor" opacity=".4"/><circle cx="40" cy="18" r="1.5" fill="currentColor" opacity=".4"/></svg>`,
+    bulk:         `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 16l16-8 16 8v16l-16 8-16-8V16z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M8 16l16 8 16-8M24 24v16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M16 12l16 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".4"/></svg>`,
   };
   const defaultIcon = `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="14" stroke="currentColor" stroke-width="2.5"/><circle cx="24" cy="24" r="6" stroke="currentColor" stroke-width="2"/></svg>`;
 
@@ -69,8 +72,7 @@ function buildNavs() {
     const d = document.createElement('div');
     d.className = 'cat-item';
     d.id = 'dc-' + c.id;
-    const iconKey = c.id.replace(/[^a-z]/gi, '').toLowerCase();
-    const icon = catIcons[iconKey] || defaultIcon;
+    const icon = catIcons[c.id] || defaultIcon;
     d.innerHTML = `<span class="cat-svg-icon">${icon}</span>${c.label}`;
     d.onclick = () => setActiveCat(c.id);
     dc.appendChild(d);
@@ -394,11 +396,14 @@ function buildStitchCats() {
 
   // SVG icons for each category
   const catIcons = {
-    bakedsushi: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="14" width="32" height="22" rx="4" stroke="currentColor" stroke-width="2.5"/><path d="M14 14 Q 24 8 34 14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M16 22h16M16 28h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M10 10 Q 24 4 38 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".4"/></svg>`,
-    makirolls: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="14" stroke="currentColor" stroke-width="2.5"/><circle cx="24" cy="24" r="8" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="24" r="3" fill="currentColor" opacity=".5"/><circle cx="16" cy="18" r="5" stroke="currentColor" stroke-width="2" opacity=".7"/></svg>`,
-    platters: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="12" width="36" height="26" rx="4" stroke="currentColor" stroke-width="2.5"/><rect x="10" y="16" width="28" height="6" rx="2" stroke="currentColor" stroke-width="2"/><rect x="10" y="26" width="13" height="8" rx="2" stroke="currentColor" stroke-width="2"/><rect x="25" y="26" width="13" height="8" rx="2" stroke="currentColor" stroke-width="2"/></svg>`,
-    kanisalad: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 36 Q24 14 38 36" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><ellipse cx="24" cy="36" rx="14" ry="4" stroke="currentColor" stroke-width="2"/><path d="M18 28 Q24 20 30 28" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="24" cy="18" r="4" stroke="currentColor" stroke-width="2"/></svg>`,
-    harumakisalad: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="12" y="10" width="24" height="30" rx="12" stroke="currentColor" stroke-width="2.5"/><path d="M18 20 Q 24 16 30 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M18 26 Q 24 22 30 26" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".6"/><path d="M18 32 Q 24 28 30 32" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".3"/></svg>`,
+    bakedsushi:   `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="14" width="32" height="22" rx="4" stroke="currentColor" stroke-width="2.5"/><path d="M14 14 Q 24 8 34 14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M16 22h16M16 28h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M10 10 Q 24 4 38 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".4"/></svg>`,
+    maki:         `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="14" stroke="currentColor" stroke-width="2.5"/><circle cx="24" cy="24" r="8" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="24" r="3" fill="currentColor" opacity=".5"/><circle cx="16" cy="18" r="5" stroke="currentColor" stroke-width="2" opacity=".7"/></svg>`,
+    platters:     `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="12" width="36" height="26" rx="4" stroke="currentColor" stroke-width="2.5"/><rect x="10" y="16" width="28" height="6" rx="2" stroke="currentColor" stroke-width="2"/><rect x="10" y="26" width="13" height="8" rx="2" stroke="currentColor" stroke-width="2"/><rect x="25" y="26" width="13" height="8" rx="2" stroke="currentColor" stroke-width="2"/></svg>`,
+    kanisalad:    `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 36 Q24 14 38 36" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><ellipse cx="24" cy="36" rx="14" ry="4" stroke="currentColor" stroke-width="2"/><path d="M18 28 Q24 20 30 28" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="24" cy="18" r="4" stroke="currentColor" stroke-width="2"/></svg>`,
+    haru:         `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="12" y="10" width="24" height="30" rx="12" stroke="currentColor" stroke-width="2.5"/><path d="M18 20 Q 24 16 30 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M18 26 Q 24 22 30 26" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".6"/><path d="M18 32 Q 24 28 30 32" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".3"/></svg>`,
+    birthdaysets: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="22" width="32" height="18" rx="3" stroke="currentColor" stroke-width="2.5"/><path d="M8 30h32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M16 22v-4M24 22v-6M32 22v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M16 18 Q16 14 20 14 Q16 14 16 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/><path d="M24 16 Q24 12 28 12 Q24 12 24 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/><path d="M32 18 Q32 14 36 14 Q32 14 32 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg>`,
+    partysets:    `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 38 L20 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M20 12 Q30 6 36 14 Q40 20 34 26 Q28 32 20 28 Q14 26 10 38" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/><circle cx="32" cy="14" r="2" fill="currentColor" opacity=".5"/><circle cx="38" cy="10" r="1.5" fill="currentColor" opacity=".4"/><circle cx="40" cy="18" r="1.5" fill="currentColor" opacity=".4"/></svg>`,
+    bulk:         `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 16l16-8 16 8v16l-16 8-16-8V16z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M8 16l16 8 16-8M24 24v16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M16 12l16 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".4"/></svg>`,
   };
 
   const defaultIcon = `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="14" stroke="currentColor" stroke-width="2.5"/><circle cx="24" cy="24" r="6" stroke="currentColor" stroke-width="2"/></svg>`;
@@ -407,8 +412,7 @@ function buildStitchCats() {
     const btn = document.createElement('button');
     btn.className = 'stitch-cat-btn' + (idx === 0 ? ' active' : '');
     btn.id = 'sc-' + c.id;
-    const iconKey = c.id.replace(/[^a-z]/gi,'').toLowerCase();
-    const icon = catIcons[iconKey] || catIcons[c.id] || defaultIcon;
+    const icon = catIcons[c.id] || defaultIcon;
     btn.innerHTML = `${icon}<span>${c.label}</span>`;
     btn.onclick = () => setActiveCat(c.id);
     container.appendChild(btn);
@@ -817,3 +821,79 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(rotateHeroImage, 5000);
   });
 })();
+
+/* ══════════════════════════════════════
+   FEEDBACK SYSTEM
+══════════════════════════════════════ */
+
+let _fbRating = 0; // current star rating selection
+
+function openFeedbackModal() {
+  _fbRating = 0;
+  document.getElementById('fbName').value = '';
+  document.getElementById('fbComment').value = '';
+  renderStarPicker(0);
+  document.getElementById('feedbackModal').style.display = 'flex';
+}
+
+function setStarRating(val) {
+  _fbRating = val;
+  renderStarPicker(val);
+}
+
+function renderStarPicker(active) {
+  document.querySelectorAll('.star-btn').forEach(btn => {
+    const v = parseInt(btn.dataset.v);
+    btn.classList.toggle('active', v <= active);
+  });
+}
+
+async function submitFeedback() {
+  const name    = document.getElementById('fbName').value.trim() || 'Anonymous';
+  const comment = document.getElementById('fbComment').value.trim();
+
+  if (!comment) { showToast('⚠️ Please write something first!'); return; }
+  if (_fbRating === 0) { showToast('⚠️ Please choose a star rating!'); return; }
+
+  try {
+    const res = await fetch('/api/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, rating: _fbRating, comment })
+    });
+    if (!res.ok) throw new Error('Server error');
+    closeModal('feedbackModal');
+    showToast('💌 Thank you for your feedback!');
+  } catch (e) {
+    showToast('⚠️ Could not send feedback — try again');
+  }
+}
+
+/* Load and render featured/published reviews in the strip */
+async function loadFeaturedReviews() {
+  try {
+    const res  = await fetch('/api/feedback/featured');
+    const list = await res.json();
+    if (!Array.isArray(list) || list.length === 0) return;
+
+    const strip  = document.getElementById('reviewsStrip');
+    const scroll = document.getElementById('reviewsScroll');
+    scroll.innerHTML = list.map(r => `
+      <div class="review-card">
+        <div class="review-card-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
+        <div class="review-card-text">"${r.comment}"</div>
+        <div class="review-card-name">— ${r.name || 'Customer'}</div>
+      </div>`).join('');
+    strip.style.display = 'block';
+  } catch (e) {
+    // No featured reviews yet — strip stays hidden
+  }
+}
+
+// Expose globally
+window.openFeedbackModal = openFeedbackModal;
+window.setStarRating     = setStarRating;
+window.submitFeedback    = submitFeedback;
+
+// Load featured reviews on page load
+document.addEventListener('DOMContentLoaded', loadFeaturedReviews);

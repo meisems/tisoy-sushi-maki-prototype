@@ -116,6 +116,81 @@ app.post('/api/settings', async (req, res) => {
   }
 });
 
+// FEEDBACK
+// Submit new feedback (public)
+app.post('/api/feedback', async (req, res) => {
+  try {
+    const { name, rating, comment } = req.body;
+    if (!comment || !rating) return res.status(400).json({ error: 'Missing fields' });
+    const database = await connectDB();
+    const doc = {
+      name: (name || 'Anonymous').slice(0, 60),
+      rating: Math.min(5, Math.max(1, parseInt(rating))),
+      comment: comment.slice(0, 600),
+      featured: false,
+      createdAt: new Date()
+    };
+    const result = await database.collection('feedback').insertOne(doc);
+    res.json({ ok: true, id: result.insertedId });
+  } catch (err) {
+    console.error('POST /api/feedback:', err);
+    res.status(500).json({ error: 'Failed to save feedback' });
+  }
+});
+
+// Get all feedback (admin)
+app.get('/api/feedback/all', async (req, res) => {
+  try {
+    const database = await connectDB();
+    const docs = await database.collection('feedback').find({}).sort({ createdAt: -1 }).toArray();
+    res.json(docs);
+  } catch (err) {
+    console.error('GET /api/feedback/all:', err);
+    res.status(500).json({ error: 'Failed to load feedback' });
+  }
+});
+
+// Get featured feedback (public strip)
+app.get('/api/feedback/featured', async (req, res) => {
+  try {
+    const database = await connectDB();
+    const docs = await database.collection('feedback').find({ featured: true }).sort({ createdAt: -1 }).limit(20).toArray();
+    res.json(docs);
+  } catch (err) {
+    console.error('GET /api/feedback/featured:', err);
+    res.status(500).json({ error: 'Failed to load featured feedback' });
+  }
+});
+
+// Toggle featured status (admin)
+app.post('/api/feedback/:id/toggle', async (req, res) => {
+  try {
+    const { ObjectId } = require('mongodb');
+    const database = await connectDB();
+    const doc = await database.collection('feedback').findOne({ _id: new ObjectId(req.params.id) });
+    if (!doc) return res.status(404).json({ error: 'Not found' });
+    const newVal = !doc.featured;
+    await database.collection('feedback').updateOne({ _id: doc._id }, { $set: { featured: newVal } });
+    res.json({ ok: true, featured: newVal });
+  } catch (err) {
+    console.error('POST /api/feedback/toggle:', err);
+    res.status(500).json({ error: 'Failed to update feedback' });
+  }
+});
+
+// Delete feedback (admin)
+app.delete('/api/feedback/:id', async (req, res) => {
+  try {
+    const { ObjectId } = require('mongodb');
+    const database = await connectDB();
+    await database.collection('feedback').deleteOne({ _id: new ObjectId(req.params.id) });
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('DELETE /api/feedback:', err);
+    res.status(500).json({ error: 'Failed to delete feedback' });
+  }
+});
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });

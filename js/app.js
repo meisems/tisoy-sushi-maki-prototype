@@ -54,11 +54,24 @@ async function loadMenuFromServer() {
 /* ── Category nav builders ── */
 function buildNavs() {
   const dc = document.getElementById('desktopCats');
+
+  // Same SVG icons used by the stitch tabs
+  const catIcons = {
+    bakedsushi: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="14" width="32" height="22" rx="4" stroke="currentColor" stroke-width="2.5"/><path d="M14 14 Q 24 8 34 14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M16 22h16M16 28h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M10 10 Q 24 4 38 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".4"/></svg>`,
+    makirolls:  `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="14" stroke="currentColor" stroke-width="2.5"/><circle cx="24" cy="24" r="8" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="24" r="3" fill="currentColor" opacity=".5"/><circle cx="16" cy="18" r="5" stroke="currentColor" stroke-width="2" opacity=".7"/></svg>`,
+    platters:   `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="12" width="36" height="26" rx="4" stroke="currentColor" stroke-width="2.5"/><rect x="10" y="16" width="28" height="6" rx="2" stroke="currentColor" stroke-width="2"/><rect x="10" y="26" width="13" height="8" rx="2" stroke="currentColor" stroke-width="2"/><rect x="25" y="26" width="13" height="8" rx="2" stroke="currentColor" stroke-width="2"/></svg>`,
+    kanisalad:  `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 36 Q24 14 38 36" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><ellipse cx="24" cy="36" rx="14" ry="4" stroke="currentColor" stroke-width="2"/><path d="M18 28 Q24 20 30 28" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="24" cy="18" r="4" stroke="currentColor" stroke-width="2"/></svg>`,
+    harumakisalad:`<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="12" y="10" width="24" height="30" rx="12" stroke="currentColor" stroke-width="2.5"/><path d="M18 20 Q 24 16 30 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M18 26 Q 24 22 30 26" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".6"/><path d="M18 32 Q 24 28 30 32" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".3"/></svg>`,
+  };
+  const defaultIcon = `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="14" stroke="currentColor" stroke-width="2.5"/><circle cx="24" cy="24" r="6" stroke="currentColor" stroke-width="2"/></svg>`;
+
   categories.forEach(c => {
     const d = document.createElement('div');
     d.className = 'cat-item';
     d.id = 'dc-' + c.id;
-    d.innerHTML = `<span class="cat-emoji">${c.emoji}</span>${c.label}`;
+    const iconKey = c.id.replace(/[^a-z]/gi, '').toLowerCase();
+    const icon = catIcons[iconKey] || defaultIcon;
+    d.innerHTML = `<span class="cat-svg-icon">${icon}</span>${c.label}`;
     d.onclick = () => setActiveCat(c.id);
     dc.appendChild(d);
   });

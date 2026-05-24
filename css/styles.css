@@ -1897,6 +1897,24 @@ footer{background:#111827;color:rgba(255,255,255,.72);padding:40px 24px 28px;mar
     font-size: 1.5rem;
   }
   .nav-delivery-toggle {
+    padding: 6px 10px;
+    font-size: .72rem;
+    gap: 6px;
+  }
+  .nav-toggle-pill {
+    width: 34px;
+    height: 20px;
+  }
+  .nav-toggle-pill::after {
+    width: 14px;
+    height: 14px;
+    top: 3px;
+    right: 3px;
+  }
+  .nav-toggle-pill.pickup::after {
+    left: 3px;
+  }
+  #navDeliveryLabel {
     display: none;
   }
 }
@@ -1907,4 +1925,66 @@ footer{background:#111827;color:rgba(255,255,255,.72);padding:40px 24px 28px;mar
 }
 .hero-stitch-img.fade-out {
   opacity: 0;
+}
+
+/* ══ MAP HINT ══ */
+.map-hint {
+  font-size: .74rem;
+  color: var(--text-muted);
+  font-weight: 700;
+  margin-top: 8px;
+  text-align: center;
+}
+
+/* ══ CHECKOUT TYPE TOGGLE ══ */
+.checkout-type-toggle {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  background: var(--light-gray);
+  border-radius: 12px;
+  padding: 5px;
+}
+.ctt-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 9px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: .88rem;
+  cursor: pointer;
+  background: transparent;
+  color: var(--text-muted);
+  transition: all .2s;
+}
+.ctt-btn.active {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 3px 12px rgba(0,166,81,.30);
+}
+.ctt-btn.active svg {
+  stroke: #fff;
+}
+
+/* ══ MOBILE-FRIENDLY STITCH TABS ══ */
+.stitch-cats {
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  padding: 0 8px;
+}
+.stitch-cat-btn {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+  touch-action: manipulation;
+}
+
+/* ══ MOBILE NAV TOGGLE ICON-ONLY ══ */
+@media (max-width: 360px) {
+  .logo-sub { display: none; }
+  .logo-name { font-size: .88rem; }
 }

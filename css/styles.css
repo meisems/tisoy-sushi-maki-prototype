@@ -569,7 +569,7 @@ footer{background:#111827;color:rgba(255,255,255,.72);padding:40px 24px 28px;mar
 .hero-stitch-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.45) 100%);
+  background: linear-gradient(90deg, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.42) 55%, rgba(0,0,0,0.10) 100%);
 }
 .hero-stitch-content {
   position: relative;
@@ -579,9 +579,6 @@ footer{background:#111827;color:rgba(255,255,255,.72);padding:40px 24px 28px;mar
   margin: 0 auto;
   padding: 0 40px;
   color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 .hero-stitch-content h1 {
   font-family: 'Playfair Display', serif;

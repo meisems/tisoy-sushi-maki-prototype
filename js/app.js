@@ -54,7 +54,6 @@ async function loadMenuFromServer() {
 /* ── Category nav builders ── */
 function buildNavs() {
   const dc = document.getElementById('desktopCats');
-  const mc = document.getElementById('mobileCats');
   categories.forEach(c => {
     const d = document.createElement('div');
     d.className = 'cat-item';
@@ -62,13 +61,6 @@ function buildNavs() {
     d.innerHTML = `<span class="cat-emoji">${c.emoji}</span>${c.label}`;
     d.onclick = () => setActiveCat(c.id);
     dc.appendChild(d);
-
-    const m = document.createElement('button');
-    m.className = 'm-cat-btn';
-    m.id = 'mc-' + c.id;
-    m.innerHTML = `<span>${c.emoji}</span><span>${c.label}</span>`;
-    m.onclick = () => setActiveCat(c.id);
-    mc.appendChild(m);
   });
 }
 
@@ -210,9 +202,8 @@ function setActiveCat(id) {
   const section = document.getElementById('sec-' + id);
   if (section) section.classList.add('visible');
 
-  document.querySelectorAll('.cat-item, .m-cat-btn').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.cat-item').forEach(el => el.classList.remove('active'));
   document.getElementById('dc-' + id)?.classList.add('active');
-  document.getElementById('mc-' + id)?.classList.add('active');
 }
 
 /* ── Order type toggle ── */
@@ -260,15 +251,13 @@ function showToast(msg) {
 function searchMenu(query) {
   const q = query.trim().toLowerCase();
   const clearBtn = document.getElementById('searchClear');
-  const mobileCats = document.getElementById('mobileCats');
   const secHd = document.querySelector('.section-hd');
   clearBtn.classList.toggle('hidden', q === '');
   if (!q) {
     clearSearch();
     return;
   }
-  mobileCats.style.display = 'none';
-  secHd.style.display = 'none';
+  if (secHd) secHd.style.display = 'none';
 
   const results = [];
   categories.forEach(cat => {
@@ -301,8 +290,8 @@ function clearSearch() {
   const input = document.getElementById('menuSearch');
   input.value = '';
   document.getElementById('searchClear').classList.add('hidden');
-  document.getElementById('mobileCats').style.display = '';
-  document.querySelector('.section-hd').style.display = '';
+  const secHd = document.querySelector('.section-hd');
+  if (secHd) secHd.style.display = '';
   buildSections();
   setActiveCat(activeCat);
 }
@@ -764,11 +753,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const dc = document.getElementById('dc-' + id);
     if (dc) dc.classList.add('active');
 
-    // Update mobile cats
-    document.querySelectorAll('.m-cat-btn').forEach(c => c.classList.remove('active'));
-    const mc = document.getElementById('mc-' + id);
-    if (mc) mc.classList.add('active');
-
+    // Update mobile cats — removed (using stitch tabs only now)
     // Update stitch cats
     document.querySelectorAll('.stitch-cat-btn').forEach(b => b.classList.remove('active'));
     const sc = document.getElementById('sc-' + id);

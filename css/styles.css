@@ -1865,12 +1865,32 @@ footer{background:#111827;color:rgba(255,255,255,.72);padding:40px 24px 28px;mar
   .hero-stitch {
     height: 320px;
   }
+  /* Much darker overlay on mobile so baked-in photo text is suppressed */
   .hero-stitch-overlay {
-    background: rgba(0,0,0,0.62);
+    background: linear-gradient(180deg, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.68) 55%, rgba(0,0,0,0.55) 100%);
+  }
+  /* Centre hero text on mobile */
+  .hero-stitch-content {
+    text-align: center;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .hero-stitch-content h1 {
+    font-size: clamp(1.55rem, 7vw, 2rem);
+    margin-bottom: 18px;
+  }
+  /* Category tabs: undo desktop flex:1 so tabs scroll naturally */
+  .stitch-cats {
+    justify-content: flex-start;
+    padding: 0 4px;
   }
   .stitch-cat-btn {
-    padding: 12px 18px;
-    font-size: .76rem;
+    flex: 0 0 auto;
+    min-width: unset;
+    padding: 12px 14px;
+    font-size: .74rem;
   }
   .stitch-cat-btn svg {
     width: 28px;

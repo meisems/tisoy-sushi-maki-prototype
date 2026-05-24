@@ -569,15 +569,19 @@ footer{background:#111827;color:rgba(255,255,255,.72);padding:40px 24px 28px;mar
 .hero-stitch-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(0,0,0,0.68) 0%, rgba(0,0,0,0.38) 60%, transparent 100%);
+  background: linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.45) 100%);
 }
 .hero-stitch-content {
   position: relative;
   z-index: 2;
+  width: 100%;
   max-width: 1340px;
   margin: 0 auto;
   padding: 0 40px;
   color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .hero-stitch-content h1 {
   font-family: 'Playfair Display', serif;
@@ -666,6 +670,7 @@ footer{background:#111827;color:rgba(255,255,255,.72);padding:40px 24px 28px;mar
   overflow-x: auto;
   scrollbar-width: none;
   transition: background .3s;
+  justify-content: space-between;
 }
 .stitch-cats::-webkit-scrollbar { display: none; }
 .stitch-cat-btn {
@@ -673,7 +678,7 @@ footer{background:#111827;color:rgba(255,255,255,.72);padding:40px 24px 28px;mar
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  padding: 16px 28px;
+  padding: 16px 10px;
   border: none;
   background: transparent;
   cursor: pointer;
@@ -686,6 +691,8 @@ footer{background:#111827;color:rgba(255,255,255,.72);padding:40px 24px 28px;mar
   white-space: nowrap;
   position: relative;
   bottom: -1px;
+  flex: 1;
+  min-width: 0;
 }
 .stitch-cat-btn svg {
   width: 36px;

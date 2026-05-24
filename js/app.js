@@ -833,7 +833,10 @@ function openFeedbackModal() {
   document.getElementById('fbName').value = '';
   document.getElementById('fbComment').value = '';
   renderStarPicker(0);
-  document.getElementById('feedbackModal').style.display = 'flex';
+  const modal = document.getElementById('feedbackModal');
+  modal.style.display = '';   // clear any residual inline style
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
 }
 
 function setStarRating(val) {

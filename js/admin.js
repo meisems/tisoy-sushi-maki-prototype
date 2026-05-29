@@ -38,11 +38,21 @@ async function initAdmin() {
   window.adminMenu = adminMenu;
   if (typeof buildSections === 'function') buildSections();
 
-  // buildSections() recreates all .menu-section divs without the .visible class,
-  // so the active category becomes hidden. Restore visibility here.
-  const restoreCat = typeof activeCat !== 'undefined' ? activeCat : 'bakedsushi';
-  const setActive = window.setActiveCat || (typeof setActiveCat === 'function' && setActiveCat);
-  if (setActive) setActive(restoreCat);
+  // buildSections() wipes all .menu-section elements (none have .visible yet).
+  // Re-apply the active category so the correct section becomes visible again.
+  const restoreCat = (typeof activeCat !== 'undefined' && activeCat) ? activeCat : 'bakedsushi';
+
+  // Prefer window.setActiveCat (may be the stitch-aware override); fall back to
+  // the module-level setActiveCat which also updates secTitle / secDesc.
+  const setActive = window.setActiveCat || (typeof setActiveCat === 'function' ? setActiveCat : null);
+  if (setActive) {
+    setActive(restoreCat);
+  } else {
+    // Minimal fallback: at least show the right section
+    document.querySelectorAll('.menu-section').forEach(s => s.classList.remove('visible'));
+    const sec = document.getElementById('sec-' + restoreCat);
+    if (sec) sec.classList.add('visible');
+  }
 }
 
 function checkAdminAccess() {

@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   setActiveCat(activeCat);
   renderCart();
   checkStoreStatus();
-  initAdmin();
+  await initAdmin();
 
   // Restore active toggle button
   document.querySelectorAll('.toggle-btn').forEach(btn => {
@@ -97,6 +97,13 @@ function buildSections() {
     sec.innerHTML = `<div class="menu-grid">${cardsHTML}</div>`;
     wrap.appendChild(sec);
   });
+
+  // After rebuilding all sections, restore the active category's visibility.
+  // Without this, every buildSections() call leaves the menu blank until
+  // setActiveCat() is called externally.
+  const currentCat = (typeof activeCat !== 'undefined' && activeCat) ? activeCat : 'bakedsushi';
+  const sec = document.getElementById('sec-' + currentCat);
+  if (sec) sec.classList.add('visible');
 }
 
 /* ── Menu card HTML ── */
